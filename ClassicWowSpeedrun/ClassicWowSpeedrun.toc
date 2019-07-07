@@ -1,0 +1,14 @@
+## Title: ClassicWowSpeedrun
+## Version: 1.0
+## Author: christophrus
+## Interface: 70200
+## SavedVariables: ClassicWowSpeedrunDB
+
+#@no-lib-strip@
+libs\LibStub\LibStub.lua
+libs\LibJSON-1.0\LibJSON.lua
+libs\LibChecksum-1.0\LibChecksum.lua
+libs\LibBase64-1.0\LibBase64.lua
+#@end-no-lib-strip@
+
+ClassicWowSpeedrun.xml

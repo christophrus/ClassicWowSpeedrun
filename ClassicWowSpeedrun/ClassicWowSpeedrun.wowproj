@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Deploy" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Default</Configuration>
+    <Name>ClassicWowSpeedrun</Name>
+    <ProjectGuid>e2e97763-0bf2-4b6e-8d82-c62cc6b12cb8</ProjectGuid>
+    <AssemblyName>ClassicWowSpeedrun</AssemblyName>
+    <RootNamespace>ClassicWowSpeedrun</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Default' ">
+    <OutputPath>.</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="ClassicWowSpeedrun.toc">
+      <SubType>TableOfContents</SubType>
+    </Content>
+    <Content Include="ClassicWowSpeedrun.xml">
+      <SubType>Frame</SubType>
+    </Content>
+    <Content Include="ClassicWowSpeedrun.lua">
+      <SubType>Code</SubType>
+      <DependentUpon>ClassicWowSpeedrun.xml</DependentUpon>
+    </Content>
+    <Content Include="libs\LibBase64-1.0\LibBase64.lua">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="libs\LibBase64-1.0\LICENSE" />
+    <Content Include="libs\LibJSON-1.0\LibJSON.lua">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="libs\LibChecksum-1.0\LibChecksum.lua">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="libs\LibStub\Changelog-LibStub-1.0.2-70000.txt" />
+    <Content Include="libs\LibStub\LibStub.lua">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="libs\LibStub\LibStub.toc">
+      <SubType>TableOfContents</SubType>
+    </Content>
+    <Content Include="libs\LibStub\tests\test.lua">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="libs\LibStub\tests\test2.lua">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="libs\LibStub\tests\test3.lua">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="libs\LibStub\tests\test4.lua">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="libs\LibStub" />
+    <Folder Include="libs\LibStub\tests" />
+    <Folder Include="libs\LibJSON-1.0" />
+    <Folder Include="libs\LibChecksum-1.0" />
+    <Folder Include="libs\LibBase64-1.0" />
+    <Folder Include="libs" />
+  </ItemGroup>
+  <Import Project="$(DevEnvDir)\Extensions\Tools\MSBuild\AddonStudio\Wow\3.0\WowAddonStudio.targets" />
+  <!--
+  To modify your build process, add your task inside one of the targets below and uncomment it.
+  <Target Name="BeforeClean"></Target>
+  <Target Name="AfterClean"></Target>
+  <Target Name="BeforeRebuild"></Target>
+  <Target Name="AfterRebuild"></Target>
+  <Target Name="BeforeDeploy"></Target>
+  <Target Name="AfterDeploy"></Target>
+  -->
+</Project>

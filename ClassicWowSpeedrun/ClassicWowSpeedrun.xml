@@ -1,0 +1,265 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="ClassicWowSpeedrun.lua" />
+	<Button name="ClassicWowSpeedrunSplitButton" virtual="true">
+		<Size>
+			<AbsDimension x="220" y="36" />
+		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBackground" alpha="0.3" file="Interface\DialogFrame\UI-DialogBox-Background">
+					<Size x="246" y="36" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="0" />
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="BORDER">
+				<FontString name="$parentLevel" inherits="GameFontNormal" text="Level 45" justifyH="LEFT">
+					<Size x="60" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="0" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentPrevReal" inherits="GameFontNormal" text="- 001:05:22">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOP" x="0" y="0" />
+					</Anchors>
+					<Color r="1" g="0" b="0" />
+				</FontString>
+				<FontString name="$parentPrevPlayed" font="Fonts\FRIZQT__.TTF" text="(+001:22:00)">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentPrevReal" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="4" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<FontHeight val="8" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString name="$parentCurrReal" inherits="GameFontNormal" text="001:03:22" justifyH="RIGHT">
+					<Size x="200" y="20" />
+					<Anchors>
+						<Anchor point="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="0" g="0.753" b="0" />
+				</FontString>
+				<FontString name="$parentCurrPlayed" font="Fonts\FRIZQT__.TTF" text="(001:24:13)" justifyH="RIGHT">
+					<Size x="200" y="20" />
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentCurrReal" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="4" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<FontHeight val="8" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD">
+			<Size>
+				<AbsDimension x="220" y="36" />
+			</Size>
+			<Anchors>
+				<Anchor point="TOP">
+					<Offset>
+						<AbsDimension x="0" y="0" />
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</HighlightTexture>
+	</Button>
+	<Frame name="ClassicWowSpeedrun" parent="UIParent" toplevel="true" enableMouse="true">
+		<Size x="246" y="440" />
+		<Anchors>
+			<Anchor point="TOPLEFT" x="20" y="-100" />
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="BackgroundTexture" alpha="0.7" file="Interface\DialogFrame\UI-DialogBox-Background">
+					<Size x="246" y="440" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="0" />
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer>
+				<FontString name="ClassicWowSpeedrunRealTimeClock" font="Fonts\FRIZQT__.TTF" text="123:45:01" justifyH="RIGHT">
+					<Size x="236" y="52" />
+					<Anchors>
+						<Anchor point="TOPRIGHT" x="-10" y="-328" />
+					</Anchors>
+					<FontHeight val="40" />
+					<Color r="0" g="0.753" b="0" />
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString name="ClassicWowSpeedrunStarted" inherits="GameFontNormal" text="2019-07-03 14:23 UTC">
+					<Size x="240" y="11" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="3" y="-23" />
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Run started">
+					<Size x="243" y="14" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="3" y="-10" />
+					</Anchors>
+				</FontString>
+				<FontString name="ClassicWowSpeedrunPlayedTimeClock" inherits="GameFontNormal" text="FontString2" justifyH="RIGHT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPRIGHT" relativeTo="ClassicWowSpeedrunRealTimeClock" relativePoint="BOTTOMRIGHT" x="0" y="0" />
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<ScrollFrame name="ClassicWowSpeedrunScrollFrame" inherits="FauxScrollFrameTemplate" hidden="true">
+				<Size x="220" y="288" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="0" y="-40" />
+				</Anchors>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(self, offset, 36, ClassicWowSpeedrunScrollBar_Update);
+					</OnVerticalScroll>
+					<OnShow>
+						ClassicWowSpeedrunScrollBar_Update()
+					</OnShow>
+				</Scripts>
+			</ScrollFrame>
+			<Button name="LevelSplitButton1" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="ClassicWowSpeedrunScrollFrame" relativePoint="TOPLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="LevelSplitButton2" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton1" relativePoint="BOTTOMLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="LevelSplitButton3" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton2" relativePoint="BOTTOMLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="LevelSplitButton4" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton3" relativePoint="BOTTOMLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="LevelSplitButton5" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton4" relativePoint="BOTTOMLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="LevelSplitButton6" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton5" relativePoint="BOTTOMLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="LevelSplitButton7" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton6" relativePoint="BOTTOMLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
+			<Button name="LevelSplitButton8" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton7" relativePoint="BOTTOMLEFT" x="0" y="0" />
+				</Anchors>
+			</Button>
+			<Button inherits="UIPanelButtonTemplate" text="reset">
+				<Size x="75" y="23" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="19" y="-386" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Button1_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="ClassicWowSpeedrunExportButton" inherits="UIPanelButtonTemplate" text="Export">
+				<Size x="75" y="23" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="3" y="-414" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						ClassicWowSpeedrunExportButton_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad function="ClassicWowSpeedrun_OnLoad">
+
+			</OnLoad>
+			<OnEvent function="ClassicWowSpeedrun_OnEvent">
+
+			</OnEvent>
+			<OnUpdate>
+				ClassicWowSpeedrun_OnUpdate()
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+	<Frame name="ClassicWowSpeedrunExportFrame" hidden="true">
+		<Size x="412" y="217" />
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0" />
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize val="32" />
+			<EdgeSize val="32" />
+		</Backdrop>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString inherits="GameFontNormalLarge" text="Press Ctrl+C to copy the export string to your clipboard" maxLines="2">
+					<Size x="205" y="60" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="111" y="-19" />
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Visit ClassicWow-Speedrun.com and import the string into your profile">
+					<Size x="304" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="51" y="-114" />
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="ClassicWowSpeedrunExportEditBox" inherits="InputBoxTemplate">
+				<Size x="318" y="32" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="51" y="-75" />
+				</Anchors>
+			</EditBox>
+			<Button name="ClassicWowSpeedrunExportFrameCloseButton" inherits="UIPanelButtonTemplate" text="Close">
+				<Size x="75" y="23" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="321" y="-179" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						ClassicWowSpeedrunExportFrameCloseButton_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+</Ui>
