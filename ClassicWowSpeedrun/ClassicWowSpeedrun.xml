@@ -2,11 +2,11 @@
 	<Script file="ClassicWowSpeedrun.lua" />
 	<Button name="ClassicWowSpeedrunSplitButton" virtual="true">
 		<Size>
-			<AbsDimension x="220" y="36" />
+			<AbsDimension x="246" y="36" />
 		</Size>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parentBackground" alpha="0.3" file="Interface\DialogFrame\UI-DialogBox-Background">
+				<Texture name="$parentBackground" file="Interface\AddOns\ClassicWowSpeedrun\skins\Background-Odd.tga">
 					<Size x="246" y="36" />
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="0" />
@@ -17,7 +17,7 @@
 				<FontString name="$parentLevel" inherits="GameFontNormal" text="Level 45" justifyH="LEFT">
 					<Size x="60" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="0" y="0" />
+						<Anchor point="TOPLEFT" x="4" y="0" />
 					</Anchors>
 				</FontString>
 				<FontString name="$parentPrevReal" inherits="GameFontNormal" text="- 001:05:22">
@@ -44,7 +44,7 @@
 					<Anchors>
 						<Anchor point="TOPRIGHT">
 							<Offset>
-								<AbsDimension x="0" y="0" />
+								<AbsDimension x="-4" y="0" />
 							</Offset>
 						</Anchor>
 					</Anchors>
@@ -84,8 +84,8 @@
 		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="BackgroundTexture" alpha="0.7" file="Interface\DialogFrame\UI-DialogBox-Background">
-					<Size x="246" y="440" />
+				<Texture name="HeaderBackground" file="Interface\AddOns\ClassicWowSpeedrun\skins\Background-Header.tga">
+					<Size x="246" y="70" />
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="0" />
 					</Anchors>
@@ -95,31 +95,70 @@
 				<FontString name="ClassicWowSpeedrunRealTimeClock" font="Fonts\FRIZQT__.TTF" text="123:45:01" justifyH="RIGHT">
 					<Size x="236" y="52" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-10" y="-328" />
+						<Anchor point="TOPRIGHT" x="-4" y="-358" />
 					</Anchors>
-					<FontHeight val="40" />
+					<FontHeight val="34" />
 					<Color r="0" g="0.753" b="0" />
 				</FontString>
+				<Texture file="Interface\AddOns\ClassicWowSpeedrun\skins\Background-Footer.tga">
+					<Size x="246" y="102" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-338" />
+					</Anchors>
+				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
-				<FontString name="ClassicWowSpeedrunStarted" inherits="GameFontNormal" text="2019-07-03 14:23 UTC">
-					<Size x="240" y="11" />
+				<FontString name="ClassicWowSpeedrunStarted" font="Fonts\FRIZQT__.TTF" text="2019-07-03 14:23 UTC" justifyH="RIGHT">
+					<Size x="119" y="11" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="3" y="-23" />
+						<Anchor point="TOPRIGHT" x="-2" y="-58" />
 					</Anchors>
+					<FontHeight val="8" />
 					<Color r="1" g="1" b="1" />
 				</FontString>
-				<FontString inherits="GameFontNormal" text="Run started">
-					<Size x="243" y="14" />
+				<FontString font="Fonts\FRIZQT__.TTF" text="Run started" justifyH="RIGHT">
+					<Size x="112" y="14" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="3" y="-10" />
+						<Anchor point="TOPRIGHT" x="-2" y="-46" />
 					</Anchors>
+					<FontHeight val="8" />
+					<Color r="1" g="0.82" b="0" />
 				</FontString>
 				<FontString name="ClassicWowSpeedrunPlayedTimeClock" inherits="GameFontNormal" text="FontString2" justifyH="RIGHT">
 					<Size x="80" y="20" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" relativeTo="ClassicWowSpeedrunRealTimeClock" relativePoint="BOTTOMRIGHT" x="0" y="0" />
+						<Anchor point="TOPRIGHT" relativeTo="ClassicWowSpeedrunRealTimeClock" relativePoint="BOTTOMRIGHT" x="0" y="14" />
 					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString inherits="GameFontGreenLarge" text="Wow Classic">
+					<Size x="246" y="24" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-3" />
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString inherits="GameFontNormal" text="(World #1 to 60 - Any%)">
+					<Size x="246" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="0" y="-20" />
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="powered by" justifyH="LEFT">
+					<Size x="112" y="14" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="4" y="-46" />
+					</Anchors>
+					<FontHeight val="8" />
+					<Color r="1" g="0.82" b="0" />
+				</FontString>
+				<FontString name="ClassicWowSpeedrunStarted" font="Fonts\FRIZQT__.TTF" text="ClassicWow-Speedrun.com" justifyH="LEFT">
+					<Size x="119" y="11" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="4" y="-58" />
+					</Anchors>
+					<FontHeight val="7" />
 					<Color r="1" g="1" b="1" />
 				</FontString>
 			</Layer>
@@ -128,7 +167,7 @@
 			<ScrollFrame name="ClassicWowSpeedrunScrollFrame" inherits="FauxScrollFrameTemplate" hidden="true">
 				<Size x="220" y="288" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="0" y="-40" />
+					<Anchor point="TOPLEFT" x="0" y="-70" />
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
@@ -143,6 +182,20 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="ClassicWowSpeedrunScrollFrame" relativePoint="TOPLEFT" x="0" y="0" />
 				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture name="$parentBackground">
+							<Size x="246" y="36" />
+							<Anchors>
+								<Anchor point="TOPLEFT" x="0" y="0" />
+							</Anchors>
+							<Gradient>
+								<MinColor r="0" g="0" b="0" />
+								<MaxColor r="1" g="1" b="1" />
+							</Gradient>
+						</Texture>
+					</Layer>
+				</Layers>
 			</Button>
 			<Button name="LevelSplitButton2" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
 				<Anchors>
@@ -179,17 +232,6 @@
 					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton7" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button inherits="UIPanelButtonTemplate" text="reset">
-				<Size x="75" y="23" />
-				<Anchors>
-					<Anchor point="TOPLEFT" x="19" y="-386" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						Button1_OnClick()
-					</OnClick>
-				</Scripts>
-			</Button>
 			<Button name="ClassicWowSpeedrunExportButton" inherits="UIPanelButtonTemplate" text="Export">
 				<Size x="75" y="23" />
 				<Anchors>
@@ -214,10 +256,10 @@
 			</OnUpdate>
 		</Scripts>
 	</Frame>
-	<Frame name="ClassicWowSpeedrunExportFrame" hidden="true">
-		<Size x="412" y="217" />
+	<Frame name="ClassicWowSpeedrunExportFrame" hidden="true" frameStrata="DIALOG" enableKeyboard="true" propagateKeyboardInput="true">
+		<Size x="440" y="220" />
 		<Anchors>
-			<Anchor point="CENTER" x="0" y="0" />
+			<Anchor point="CENTER" x="56" y="-8" />
 		</Anchors>
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
 			<BackgroundInsets>
@@ -228,31 +270,62 @@
 		</Backdrop>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString inherits="GameFontNormalLarge" text="Press Ctrl+C to copy the export string to your clipboard" maxLines="2">
-					<Size x="205" y="60" />
+				<FontString font="Fonts\FRIZQT__.TTF" text="To copy the export string press" maxLines="2">
+					<Size x="340" y="24" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="111" y="-19" />
+						<Anchor point="TOPLEFT" x="50" y="-16" />
 					</Anchors>
+					<FontHeight val="14" />
+					<Color r="1" g="0.82" b="0" />
 				</FontString>
-				<FontString inherits="GameFontNormal" text="Visit ClassicWow-Speedrun.com and import the string into your profile">
-					<Size x="304" y="20" />
+				<FontString font="Fonts\FRIZQT__.TTF" text="and paste it to">
+					<Size x="434" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="51" y="-114" />
+						<Anchor point="TOPLEFT" x="3" y="-113" />
 					</Anchors>
+					<FontHeight val="14" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="STRG+C" maxLines="2">
+					<Size x="340" y="41" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="50" y="-42" />
+					</Anchors>
+					<FontHeight val="30" />
+					<Color r="1" g="0.82" b="0" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="ClassicWow-Speedrun.com">
+					<Size x="434" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="3" y="-140" />
+					</Anchors>
+					<FontHeight val="24" />
+					<Color r="1" g="1" b="1" />
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
 			<EditBox name="ClassicWowSpeedrunExportEditBox" inherits="InputBoxTemplate">
-				<Size x="318" y="32" />
+				<Size x="340" y="32" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="51" y="-75" />
+					<Anchor point="TOPLEFT" x="50" y="-79" />
 				</Anchors>
+				<Scripts>
+					<OnKeyUp>
+						ClassicWowSpeedrunExportEditBox_OnKeyUp()
+					</OnKeyUp>
+					<OnCursorChanged>
+						ClassicWowSpeedrunExportEditBox_OnCursorChanged()
+					</OnCursorChanged>
+					<OnKeyDown function="ClassicWowSpeedrunExportEditBox_OnKeyDown">
+
+					</OnKeyDown>
+				</Scripts>
 			</EditBox>
 			<Button name="ClassicWowSpeedrunExportFrameCloseButton" inherits="UIPanelButtonTemplate" text="Close">
 				<Size x="75" y="23" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="321" y="-179" />
+					<Anchor point="TOPLEFT" x="315" y="-174" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -262,4 +335,15 @@
 			</Button>
 		</Frames>
 	</Frame>
+	<Button inherits="UIPanelButtonTemplate" hidden="true" text="reset">
+		<Size x="75" y="23" />
+		<Anchors>
+			<Anchor point="TOPLEFT" x="68" y="-606" />
+		</Anchors>
+		<Scripts>
+			<OnClick>
+				Button1_OnClick()
+			</OnClick>
+		</Scripts>
+	</Button>
 </Ui>

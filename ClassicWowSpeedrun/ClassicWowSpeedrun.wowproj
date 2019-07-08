@@ -50,6 +50,10 @@
     <Content Include="libs\LibStub\tests\test4.lua">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="skins\Background-Even.tga" />
+    <Content Include="skins\Background-Footer.tga" />
+    <Content Include="skins\Background-Header.tga" />
+    <Content Include="skins\Background-Odd.tga" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="libs\LibStub" />
@@ -58,6 +62,7 @@
     <Folder Include="libs\LibChecksum-1.0" />
     <Folder Include="libs\LibBase64-1.0" />
     <Folder Include="libs" />
+    <Folder Include="skins" />
   </ItemGroup>
   <Import Project="$(DevEnvDir)\Extensions\Tools\MSBuild\AddonStudio\Wow\3.0\WowAddonStudio.targets" />
   <!--

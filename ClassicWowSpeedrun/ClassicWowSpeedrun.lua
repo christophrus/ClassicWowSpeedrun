@@ -52,6 +52,7 @@ function ClassicWowSpeedrun_OnUpdate()
 			local newOffset = #splits - 8 < 0 and 0 or #splits -8
 			ClassicWowSpeedrunScrollFrame:SetVerticalScroll(newOffset*36)
 			ClassicWowSpeedrunStarted:SetText(date("!%Y-%m-%d %H:%M:%S UTC", g_startDate))
+			ClassicWowSpeedrunScrollFrameScrollBar:Hide()
 			g_scrollBarInitialized = true
 		end
 	end
@@ -77,17 +78,19 @@ function ClassicWowSpeedrunScrollBar_Update()
 		local button = "LevelSplitButton"..line
 		-- set alternating background colors for split buttons
 		local buttonBG = getglobal(button.."Background")
+
+		
 		if (line % 2 == 0) then
 			if (offset % 2 == 0) then
-				buttonBG:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
+				buttonBG:SetTexture("Interface\\AddOns\\ClassicWowSpeedrun\\skins\\Background-Even.tga")
 			else
-				buttonBG:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Background")
+				buttonBG:SetTexture("Interface\\AddOns\\ClassicWowSpeedrun\\skins\\Background-Odd.tga")
 			end
 		else 
 			if (offset % 2 == 0) then
-				buttonBG:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Background")
+				buttonBG:SetTexture("Interface\\AddOns\\ClassicWowSpeedrun\\skins\\Background-Odd.tga")
 			else
-				buttonBG:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
+				buttonBG:SetTexture("Interface\\AddOns\\ClassicWowSpeedrun\\skins\\Background-Even.tga")
 			end
 		end
 
@@ -202,15 +205,33 @@ function Button1_OnClick()
 	C_UI.Reload()
 end
 
+base64Text = ""
 function ClassicWowSpeedrunExportButton_OnClick()
 	local jsonText = json:encode(ClassicWowSpeedrunDB)
-	local base64Text = base64:encode(jsonText)
+	base64Text = base64:encode(jsonText)
 	ClassicWowSpeedrunExportFrame:Show()
 	ClassicWowSpeedrunExportEditBox:SetText(base64Text)
 	ClassicWowSpeedrunExportEditBox:HighlightText()
-	ClassicWowSpeedrunExportEditBox:SetCursorPosition(1)
+	ClassicWowSpeedrunExportEditBox:SetCursorPosition(0)
 end
 
 function ClassicWowSpeedrunExportFrameCloseButton_OnClick()
 	ClassicWowSpeedrunExportFrame:Hide()
+end
+
+function ClassicWowSpeedrunExportEditBox_OnCursorChanged()
+	ClassicWowSpeedrunExportEditBox:SetCursorPosition(0)
+	ClassicWowSpeedrunExportEditBox:HighlightText()
+end
+
+function ClassicWowSpeedrunExportEditBox_OnKeyUp()
+	ClassicWowSpeedrunExportEditBox:SetText(base64Text)
+	ClassicWowSpeedrunExportEditBox:HighlightText()
+	ClassicWowSpeedrunExportEditBox:SetCursorPosition(0)
+end
+
+function ClassicWowSpeedrunExportEditBox_OnKeyDown(self, key)
+	if (key == "ESCAPE") then
+		ClassicWowSpeedrunExportFrame:Hide()
+	end
 end
