@@ -77,7 +77,7 @@
 			</Anchors>
 		</HighlightTexture>
 	</Button>
-	<Frame name="ClassicWowSpeedrun" parent="UIParent" toplevel="true" enableMouse="true">
+	<Frame name="ClassicWowSpeedrun" hidden="true" parent="UIParent" toplevel="true" enableMouse="true">
 		<Size x="246" y="440" />
 		<Anchors>
 			<Anchor point="TOPLEFT" x="20" y="-100" />
@@ -95,7 +95,7 @@
 				<FontString name="ClassicWowSpeedrunRealTimeClock" font="Fonts\FRIZQT__.TTF" text="123:45:01" justifyH="RIGHT">
 					<Size x="236" y="52" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-4" y="-358" />
+						<Anchor point="TOPRIGHT" x="-4" y="-370" />
 					</Anchors>
 					<FontHeight val="34" />
 					<Color r="0" g="0.753" b="0" />
@@ -106,20 +106,26 @@
 						<Anchor point="TOPLEFT" x="0" y="-338" />
 					</Anchors>
 				</Texture>
+				<Texture file="Interface\CharacterFrame\TemporaryPortrait-Female-NightElf">
+					<Size x="25" y="25" />
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+					</Anchors>
+				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
-				<FontString name="ClassicWowSpeedrunStarted" font="Fonts\FRIZQT__.TTF" text="2019-07-03 14:23 UTC" justifyH="RIGHT">
+				<FontString name="ClassicWowSpeedrunStarted" font="Fonts\FRIZQT__.TTF" text="2019-07-03 14:23 UTC" justifyV="TOP" justifyH="RIGHT">
 					<Size x="119" y="11" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-2" y="-58" />
+						<Anchor point="TOPRIGHT" x="-4" y="-370" />
 					</Anchors>
 					<FontHeight val="8" />
 					<Color r="1" g="1" b="1" />
 				</FontString>
-				<FontString font="Fonts\FRIZQT__.TTF" text="Run started" justifyH="RIGHT">
-					<Size x="112" y="14" />
+				<FontString font="Fonts\FRIZQT__.TTF" text="Run started" justifyV="TOP" justifyH="RIGHT">
+					<Size x="112" y="10" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-2" y="-46" />
+						<Anchor point="TOPRIGHT" x="-4" y="-361" />
 					</Anchors>
 					<FontHeight val="8" />
 					<Color r="1" g="0.82" b="0" />
@@ -138,28 +144,35 @@
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
-				<FontString inherits="GameFontNormal" text="(World #1 to 60 - Any%)">
+				<FontString name="ClassicWowSpeedrunSubTitle" inherits="GameFontNormal" text="(World #1 to 60 - Any%)">
 					<Size x="246" y="20" />
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="-20" />
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
-				<FontString font="Fonts\FRIZQT__.TTF" text="powered by" justifyH="LEFT">
-					<Size x="112" y="14" />
+				<FontString font="Fonts\FRIZQT__.TTF" text="powered by" justifyV="BOTTOM" justifyH="LEFT">
+					<Size x="112" y="10" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="4" y="-46" />
+						<Anchor point="TOPLEFT" x="6" y="-419" />
 					</Anchors>
 					<FontHeight val="8" />
 					<Color r="1" g="0.82" b="0" />
 				</FontString>
-				<FontString name="ClassicWowSpeedrunStarted" font="Fonts\FRIZQT__.TTF" text="ClassicWow-Speedrun.com" justifyH="LEFT">
-					<Size x="119" y="11" />
+				<FontString name="ClassicWowSpeedrunStarted" font="Fonts\FRIZQT__.TTF" text="ClassicWow-Speedrun.com" justifyV="BOTTOM" justifyH="LEFT">
+					<Size x="120" y="10" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="4" y="-58" />
+						<Anchor point="TOPLEFT" x="6" y="-427" />
 					</Anchors>
 					<FontHeight val="7" />
 					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString name="ClassicWowSpeedrunSubSubTitle" font="Fonts\FRIZQT__.TTF" text="">
+					<Size x="246" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="6" y="-33" />
+					</Anchors>
+					<FontHeight val="10" />
 				</FontString>
 			</Layer>
 		</Layers>
@@ -235,7 +248,7 @@
 			<Button name="ClassicWowSpeedrunExportButton" inherits="UIPanelButtonTemplate" text="Export">
 				<Size x="75" y="23" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="3" y="-414" />
+					<Anchor point="TOPLEFT" x="6" y="-364" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -346,4 +359,236 @@
 			</OnClick>
 		</Scripts>
 	</Button>
+	<Frame name="ClassicWowSpeedrunNewCharDetected" hidden="true" toplevel="true" frameStrata="DIALOG">
+		<Size x="366" y="264" />
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="-32" />
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize val="32" />
+			<EdgeSize val="32" />
+		</Backdrop>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString inherits="GameFontNormal" text="Difficulty" justifyH="LEFT">
+					<Size x="81" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="215" y="-65" />
+					</Anchors>
+				</FontString>
+				<FontString name="LabelNoAH" hidden="true" font="Fonts\FRIZQT__.TTF" text="noAH" justifyH="LEFT">
+					<Size x="44" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="215" y="-157" />
+					</Anchors>
+					<FontHeight val="10" />
+				</FontString>
+				<FontString name="LabelNoParty" hidden="true" font="Fonts\FRIZQT__.TTF" text="noParty" justifyH="LEFT">
+					<Size x="51" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="215" y="-187" />
+					</Anchors>
+					<FontHeight val="10" />
+				</FontString>
+				<FontString name="LabelNoMail" hidden="true" font="Fonts\FRIZQT__.TTF" text="noMail" justifyH="LEFT">
+					<Size x="53" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="290" y="-157" />
+					</Anchors>
+					<FontHeight val="10" />
+				</FontString>
+				<FontString name="LabelNoTrade" hidden="true" font="Fonts\FRIZQT__.TTF" text="noTrade" justifyH="LEFT">
+					<Size x="55" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="290" y="-187" />
+					</Anchors>
+					<FontHeight val="10" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Custom" justifyH="LEFT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="215" y="-124" />
+					</Anchors>
+					<FontHeight val="10" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Target" justifyH="LEFT">
+					<Size x="81" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="55" y="-65" />
+					</Anchors>
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="World #1 to 60" justifyH="LEFT">
+					<Size x="101" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="55" y="-94" />
+					</Anchors>
+					<FontHeight val="10" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Custom Level" justifyH="LEFT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="55" y="-124" />
+					</Anchors>
+					<FontHeight val="10" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Any %" justifyH="LEFT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="215" y="-94" />
+					</Anchors>
+					<FontHeight val="10" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString name="TargetLevelLabel" inherits="GameFontNormal" hidden="true" text="60">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="55" y="-176" />
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString inherits="GameFontNormalLarge" text="Wow Classic Speedrun">
+					<Size x="325" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="20" y="-17" />
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Select your speedrun preset:">
+					<Size x="325" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="20" y="-36" />
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="ClassicWowSpeedrunStartRunButton" inherits="UIPanelButtonTemplate" text="Start run">
+				<Size x="90" y="23" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="95" y="-221" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						ClassicWowSpeedrunStartRunButton_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="ClassicWowSpeedrunNotStartRunButton" inherits="UIPanelButtonTemplate" text="No, thanks!">
+				<Size x="90" y="23" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="191" y="-221" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						ClassicWowSpeedrunNotStartRunButton_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<CheckButton name="OptionNoMail" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton1" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="260" y="-157" />
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="OptionNoTrade" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton2" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="260" y="-187" />
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="OptionNoAH" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton1" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="185" y="-157" />
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="OptionNoParty" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton1" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="185" y="-187" />
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="OptionAnyPercent" inherits="UIRadioButtonTemplate" text="CheckButton1" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="185" y="-92" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						OptionAnyPercent_OnClick()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="CustomDifficulty" inherits="UIRadioButtonTemplate" text="CheckButton1">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="185" y="-122" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						CustomDifficulty_OnClick()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<Cooldown inherits="CooldownFrameTemplate">
+				<Size x="36" y="36" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="233" y="-19" />
+				</Anchors>
+			</Cooldown>
+			<CheckButton name="OptionTargetFirstTo60" inherits="UIRadioButtonTemplate" text="CheckButton1" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="20" y="-92" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						OptionTargetFirstTo60_OnClick()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="OptionTargetCustom" inherits="UIRadioButtonTemplate" text="CheckButton1">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="20" y="-122" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						OptionTargetCustom_OnClick()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<Slider name="ClassicWowSpeedrunLevelSlider" hidden="true" minValue="5" maxValue="60" defaultValue="60" valueStep="5" orientation="HORIZONTAL">
+				<Size x="140" y="17" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="20" y="-157" />
+				</Anchors>
+				<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+					<BackgroundInsets left="3" right="3" top="6" bottom="6" />
+					<TileSize val="8" />
+					<EdgeSize val="8" />
+				</Backdrop>
+				<HitRectInsets top="-10" bottom="-10" />
+				<Scripts>
+					<OnValueChanged>
+						ClassicWowSpeedrunLevelSlider_OnValueChanged(self, value, userInput)
+					</OnValueChanged>
+				</Scripts>
+				<ThumbTexture name="LevelSliderThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+					<Size x="32" y="32" />
+				</ThumbTexture>
+			</Slider>
+		</Frames>
+		<Scripts>
+			<OnShow>
+				ClassicWowSpeedrunNewCharDetected_OnShow()
+			</OnShow>
+		</Scripts>
+	</Frame>
 </Ui>
