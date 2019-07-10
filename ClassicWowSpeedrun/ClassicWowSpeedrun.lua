@@ -7,8 +7,8 @@ local g_playerLoaded = false
 local g_variablesInitialized = false
 local g_scrollBarInitialized = false
 local g_guid = false
-local g_runStarted = false
-local g_runEnded = false
+local g_runStarted = nil
+local g_runFinished = nil
 local g_reloaded = true
 local g_startDate = false
 local g_initialRealTime = false
@@ -77,6 +77,41 @@ local function formatPBTime(d)
 
 end
 
+local function concatOptions(t, template)
+	local ret = ""
+	local template = template or "%s, "
+	for k, v in pairs(t) do
+		if (v == true) then
+			ret=ret..template:format(k)
+		end
+	end
+	ret, _ = ret:gsub(", $", "")
+	return ret
+end
+
+local function findPrivateBest(targetLevel)
+
+	targetLevel = tonumber(targetLevel)
+
+	local runs = ClassicWowSpeedrunDB['runs']
+	local fastestTime = 99999999999
+	local fastestGuid = nil
+
+	for guid,run in pairs(runs) do
+		if (guid ~= g_guid) then
+			if (run['splits'][targetLevel] and run["options"]["targetLevel"] == targetLevel) then
+				local timediff = run["splits"][targetLevel]["realTime"] - run["splits"][1]["realTime"]
+				if (timediff < fastestTime) then
+					fastestTime = timediff
+					fastestGuid = guid
+				end
+			end
+		end
+	end
+
+	return fastestGuid
+end
+
 function ClassicWowSpeedrun_OnUpdate()
 
 	local splits = {}
@@ -85,12 +120,13 @@ function ClassicWowSpeedrun_OnUpdate()
 		splits = ClassicWowSpeedrunDB['runs'][g_guid]['splits']
 	end
 
-	if (not g_runEnded and g_currentLevel >= g_targetLevel) then
-		print("run ended")
-		g_runEnded = true
+	if (not g_runFinished and g_currentLevel >= g_targetLevel) then
+		g_runFinished = true
+		ClassicWowSpeedrunDB['runs'][g_guid]["runFinished"] = true
+		ClassicWowSpeedRunFinished:Show()
 	end
 
-	if (not g_runEnded) then
+	if (not g_runFinished) then
 		if (#splits > 0) then	
 			g_startDate = splits[1]['realTime']
 			ClassicWowSpeedrunScrollFrame:Show()
@@ -106,8 +142,10 @@ function ClassicWowSpeedrun_OnUpdate()
 			local serverTime = GetServerTime()
 			local realTime = serverTime - g_startDate
 			local playedTime = g_initialPlayedTime + (serverTime - g_initialRealTime)
+			local playedTimeCurrentLevel = serverTime - splits[g_currentLevel]['realTime']
 			ClassicWowSpeedrunRealTimeClock:SetText(formatTime(realTime))
 			ClassicWowSpeedrunPlayedTimeClock:SetText(formatTime(playedTime))
+			ClassicWowSpeedrunCurrentLevelClock:SetText(formatTime(playedTimeCurrentLevel))
 
 			-- set the color of the main clock based on time to next segment
 			if (g_privateBest) then
@@ -213,55 +251,24 @@ function ClassicWowSpeedrunScrollBar_Update()
 			end
 		end 
 
-		levelText:SetText("Level: " .. levelVal)
+		if (levelVal <= g_targetLevel) then
+			levelText:SetText("Level: " .. levelVal)
+		else
+			levelText:SetText("")
+		end
 		prevRealText:SetText(prevRealVal)
 		prevPlayedText:SetText(prevPlayedVal)
 		currRealText:SetText(currRealVal)
 		currPlayedText:SetText(currPlayedVal)
 	end
-	FauxScrollFrame_Update(ClassicWowSpeedrunScrollFrame,59,7,36);
+	FauxScrollFrame_Update(ClassicWowSpeedrunScrollFrame,g_targetLevel-1,7,36);
 end
 
 function ClassicSpeedun_UpdateScrollbar()
-	print("update scrollbar")
 	local splits = ClassicWowSpeedrunDB['runs'][g_guid]['splits']
 	local newOffset = #splits - 7 < 0 and 0 or #splits - 7
 	ClassicWowSpeedrunScrollBar_Update()
 	ClassicWowSpeedrunScrollFrame:SetVerticalScroll(newOffset*36)
-end
-
-local function concatOptions(t, template)
-	local ret = ""
-	local template = template or "%s, "
-	for k, v in pairs(t) do
-		if (v == true) then
-			ret=ret..template:format(k)
-		end
-	end
-	ret, _ = ret:gsub(", $", "")
-	return ret
-end
-
-local function findPrivateBest(targetLevel)
-
-	targetLevel = tonumber(targetLevel)
-
-	local runs = ClassicWowSpeedrunDB['runs']
-	local fastestTime = 99999999999
-	local fastestGuid = nil
-
-	for guid,run in pairs(runs) do
-		if (run["splits"][targetLevel]) then
-			local timediff = run["splits"][targetLevel]["realTime"] - run["splits"][targetLevel]["realTime"]
-			if (timediff < fastestTime) then
-				fastestTime = timediff
-				fastestGuid = guid
-			end
-		end	
-	end
-
-	return fastestGuid
-
 end
 
 function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
@@ -273,22 +280,19 @@ function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
 
 	g_targetLevel = options['targetLevel']
 
-	if (#splits > 0) then
-		if (not g_runStarted) then
-			g_runStarted = true
-			ClassicWowSpeedrun:Show()
-		end
-		if (g_reloaded and g_currentLevel >= g_targetLevel) then
-			-- we only reach this point when someone /reload after a finished run
-			g_runEnded = true
-			g_startDate = splits[1]['realTime']
-			local realTime = splits[g_targetLevel]['realTime'] - g_startDate
-			local playedTime = splits[g_targetLevel]['playedTime']
-			ClassicWowSpeedrunScrollFrameScrollBar:Hide()
-			ClassicWowSpeedrunStarted:SetText(date("!%Y-%m-%d %H:%M:%S UTC", g_startDate))
-			ClassicWowSpeedrunRealTimeClock:SetText(formatTime(realTime))
-			ClassicWowSpeedrunPlayedTimeClock:SetText(formatTime(playedTime))
-		end
+	if (g_runStarted) then
+		ClassicWowSpeedrun:Show()
+	end
+
+	if (g_runFinished) then
+		g_startDate = splits[1]['realTime']
+		local realTime = splits[g_targetLevel]['realTime'] - g_startDate
+		local playedTime = splits[g_targetLevel]['playedTime']
+		ClassicWowSpeedrunScrollFrameScrollBar:Hide()
+		ClassicWowSpeedrunStarted:SetText(date("!%Y-%m-%d %H:%M:%S UTC", g_startDate))
+		ClassicWowSpeedrunRealTimeClock:SetText(formatTime(realTime))
+		ClassicWowSpeedrunPlayedTimeClock:SetText(formatTime(playedTime))
+		ClassicWowSpeedrunCurrentLevelClock:SetText(formatTime(0))
 	end
 
 	if (playedTime < 30 and not g_runStarted) then
@@ -296,14 +300,8 @@ function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
 		g_reloaded = false
 	end
 
-	print(g_targetLevel)
-	print(g_currentLevel)
-
-	print(g_runEnded)
-
 	-- intialize also when run ended because someone could /reload after a run
-	if (g_runStarted or g_runEnded) then
-		print("inside")
+	if (g_runStarted or g_runFinished) then
 		-- set split frame header texts
 		ClassicWowSpeedrunSubTitle:SetText(format("%s - %s", options["preset"], options["difficulty"]))
 		local optionsLabel = concatOptions(options)
@@ -312,12 +310,15 @@ function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
 		end
 
 		local privateBestGuid = findPrivateBest(g_targetLevel)
-		g_privateBest = ClassicWowSpeedrunDB['runs'][privateBestGuid]
+		if (privateBestGuid) then 
+			g_privateBest = ClassicWowSpeedrunDB['runs'][privateBestGuid]
+		end
 
 		if (g_privateBest) then
+			local pbTime = g_privateBest['splits'][g_targetLevel]['realTime'] - g_privateBest['splits'][1]['realTime']
 			ClassicWowSpeedtunPBLabel:Show()
 			ClassicWowSpeedrunPBDate:Show()
-			ClassicWowSpeedrunPBDate:SetText(date("%Y-%m-%d",g_privateBest["splits"][10]["realTime"]))
+			ClassicWowSpeedrunPBDate:SetText(formatTime(pbTime))
 		end
 
 		local gender = g_sex == 2 and "Male" or "Female"
@@ -331,12 +332,15 @@ function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
 			g_initialPlayedTime = playedTime
 		end
 
-		if (splits[g_currentLevel] == nil) then
-			splits[g_currentLevel] = {
-				['level'] = g_currentLevel,
-				['realTime'] = realTime,
-				['playedTime'] = playedTime
-			}
+		-- write new split into db
+		if (not g_runFinished) then
+			if (splits[g_currentLevel] == nil) then
+				splits[g_currentLevel] = {
+					['level'] = g_currentLevel,
+					['realTime'] = realTime,
+					['playedTime'] = playedTime
+				}
+			end
 		end
 		ClassicSpeedun_UpdateScrollbar()
 	end
@@ -400,6 +404,8 @@ function ClassicWowSpeedrun_InitializeVariables()
 		ClassicWowSpeedrunDB['runs'][g_guid]["race"] = g_race
 		ClassicWowSpeedrunDB['runs'][g_guid]["class"] = g_class
 		ClassicWowSpeedrunDB['runs'][g_guid]["g_sex"] = g_sex
+		ClassicWowSpeedrunDB['runs'][g_guid]["runStarted"] = false
+		ClassicWowSpeedrunDB['runs'][g_guid]["runFinished"] = false
 
 
 	end
@@ -421,6 +427,9 @@ function ClassicWowSpeedrun_InitializeVariables()
 		ClassicWowSpeedrunDB['runs'][g_guid]['splits'] = {}
 	end
 
+	g_runStarted = ClassicWowSpeedrunDB['runs'][g_guid]["runStarted"]
+	g_runFinished = ClassicWowSpeedrunDB['runs'][g_guid]["runFinished"]
+
 	RequestTimePlayed()
 	g_variablesInitialized = true
 end
@@ -440,10 +449,10 @@ function Button1_OnClick()
 	C_UI.Reload()
 end
 
-base64Text = ""
 function ClassicWowSpeedrunExportButton_OnClick()
 	local jsonText = json:encode(ClassicWowSpeedrunDB)
-	base64Text = base64:encode(jsonText)
+	local base64Text = base64:encode(jsonText)
+	ClassicWowSpeedRunFinished:Hide()
 	ClassicWowSpeedrunExportFrame:Show()
 	ClassicWowSpeedrunExportEditBox:SetText(base64Text)
 	ClassicWowSpeedrunExportEditBox:HighlightText()
@@ -459,15 +468,32 @@ function ClassicWowSpeedrunExportEditBox_OnCursorChanged()
 	ClassicWowSpeedrunExportEditBox:HighlightText()
 end
 
-function ClassicWowSpeedrunExportEditBox_OnKeyUp()
+local ctrlDown = false
+
+function ClassicWowSpeedrunExportEditBox_OnKeyUp(self, key)
+	local jsonText = json:encode(ClassicWowSpeedrunDB)
+	local base64Text = base64:encode(jsonText)
 	ClassicWowSpeedrunExportEditBox:SetText(base64Text)
 	ClassicWowSpeedrunExportEditBox:HighlightText()
 	ClassicWowSpeedrunExportEditBox:SetCursorPosition(0)
+	if (key == "LCTRL" or key == "RCTRL") then
+		ctrlDown = false
+	end
 end
 
 function ClassicWowSpeedrunExportEditBox_OnKeyDown(self, key)
 	if (key == "ESCAPE") then
 		ClassicWowSpeedrunExportFrame:Hide()
+	end
+	if (key == "LCTRL" or key == "RCTRL") then
+		ctrlDown = true
+	end
+
+	if (key == "C" and ctrlDown) then
+		ClassicWowSpeedrunExportFrameLabel1:SetText("Now you can paste it to")
+		ClassicWowSpeedrunExportFrameLabel2:SetText("WowClassic-Speedrun.com")
+		ClassicWowSpeedrunExportFrameLabel1:SetTextColor(0,192,0, 1)
+		ClassicWowSpeedrunExportFrameLabel2:SetTextColor(0,192,0, 1)
 	end
 end
 
@@ -478,6 +504,7 @@ end
 function ClassicWowSpeedrunStartRunButton_OnClick()
 
 	-- write selected options
+	local run = ClassicWowSpeedrunDB['runs'][g_guid]
 	local options = ClassicWowSpeedrunDB['runs'][g_guid]['options']
 	
 	local subSubLabel = ""
@@ -508,6 +535,7 @@ function ClassicWowSpeedrunStartRunButton_OnClick()
 	end
 
 	ClassicWowSpeedrunNewCharDetected:Hide()
+	ClassicWowSpeedrunDB['runs'][g_guid]["runStarted"] = true
 	g_runStarted = true
 	RequestTimePlayed()
 	ClassicWowSpeedrun:Show()
@@ -562,4 +590,60 @@ function OptionTargetFirstTo60_OnClick()
 	OptionTargetFirstTo60:SetChecked(true)
 	ClassicWowSpeedrunLevelSlider:Hide()
 	TargetLevelLabel:Hide()
+end
+
+function ClassicWowSpeedRunFinished_OnShow()
+
+	local currentRun = ClassicWowSpeedrunDB['runs'][g_guid]
+	local splits = currentRun['splits']
+	local options = currentRun['options']
+	local runTotalRealTime = splits[g_targetLevel]['realTime'] - splits[1]['realTime']
+	local runTotalPlayedTime = splits[g_targetLevel]['playedTime']
+
+	local runRealTimePBDiff = nil
+	local runRealTimePBDiff = nil
+
+	ClassicWowSpeedrunFinishedRealTimeChange:SetText("")
+	ClassicWowSpeedrunFinishedPlayedChange:SetText("")
+
+	if (g_privateBest) then
+		local splitsPB = g_privateBest['splits']
+		local runTotalRealTimePB = splitsPB[g_targetLevel]['realTime'] - splitsPB[1]['realTime']
+		local runTotalPlayedTimePB = splitsPB[g_targetLevel]['playedTime']
+
+		local runRealTimePBDiff = runTotalRealTime - runTotalRealTimePB
+		local runPlayedTimePBDiff = runTotalPlayedTime - runTotalPlayedTimePB
+
+		if (runRealTimePBDiff == 0) then
+			ClassicWowSpeedrunFinishedRealTimeChange:SetTextColor(255,209,0,1)  -- yellow
+		elseif (runRealTimePBDiff < 0) then
+			ClassicWowSpeedrunFinishedRealTimeChange:SetTextColor(0,192,0, 1) -- green
+		else
+			ClassicWowSpeedrunFinishedRealTimeChange:SetTextColor(255,0,0,1) -- red
+		end
+
+		if (runPlayedTimePBDiff == 0) then
+			ClassicWowSpeedrunFinishedPlayedChange:SetTextColor(255,209,0,1)  -- yellow
+		elseif (runPlayedTimePBDiff < 0) then
+			ClassicWowSpeedrunFinishedPlayedChange:SetTextColor(0,192,0, 1) -- green
+		else
+			ClassicWowSpeedrunFinishedPlayedChange:SetTextColor(255,0,0,1) -- red
+		end
+
+		ClassicWowSpeedrunFinishedRealTimeChange:SetText(formatPBTime(runRealTimePBDiff))
+		ClassicWowSpeedrunFinishedPlayedChange:SetText(formatPBTime(runPlayedTimePBDiff))
+	end
+
+	ClassicWowSpeedrunFinishedRealTime:SetText(formatTime(runTotalRealTime))
+	ClassicWowSpeedrunFinishedPlayedTime:SetText(formatTime(runTotalPlayedTime))
+	ClassicWowSpeedRunFinshedTitle:SetText(format("%s - %s", options["preset"], options["difficulty"]))
+
+	local optionsLabel = concatOptions(options)
+	if (optionsLabel ~= "") then
+		ClassicWowSpeedRunFinshedSubTitle:SetText(format("(%s)", optionsLabel))
+	end
+end
+
+function ClassicWowSpeedRunFinishedClose_OnClick()
+	ClassicWowSpeedRunFinished:Hide()
 end

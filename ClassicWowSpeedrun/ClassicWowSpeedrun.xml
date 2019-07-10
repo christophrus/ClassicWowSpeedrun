@@ -133,7 +133,7 @@
 				<FontString name="ClassicWowSpeedrunPlayedTimeClock" inherits="GameFontNormal" text="FontString2" justifyH="RIGHT">
 					<Size x="80" y="20" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" relativeTo="ClassicWowSpeedrunRealTimeClock" relativePoint="BOTTOMRIGHT" x="0" y="14" />
+						<Anchor point="TOPRIGHT" relativeTo="ClassicWowSpeedrunRealTimeClock" relativePoint="BOTTOMRIGHT" x="0" y="12" />
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
@@ -151,10 +151,10 @@
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
-				<FontString font="Fonts\FRIZQT__.TTF" text="powered by" justifyV="BOTTOM" justifyH="LEFT">
+				<FontString font="Fonts\FRIZQT__.TTF" text="Powered by" justifyV="BOTTOM" justifyH="LEFT">
 					<Size x="112" y="10" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="6" y="-419" />
+						<Anchor point="TOPLEFT" x="4" y="-343" />
 					</Anchors>
 					<FontHeight val="8" />
 					<Color r="1" g="0.82" b="0" />
@@ -162,13 +162,13 @@
 				<FontString name="ClassicWowSpeedrunStarted" font="Fonts\FRIZQT__.TTF" text="ClassicWow-Speedrun.com" justifyV="BOTTOM" justifyH="LEFT">
 					<Size x="120" y="10" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="6" y="-427" />
+						<Anchor point="TOPLEFT" x="4" y="-351" />
 					</Anchors>
 					<FontHeight val="7" />
 					<Color r="1" g="1" b="1" />
 				</FontString>
 				<FontString name="ClassicWowSpeedrunSubSubTitle" font="Fonts\FRIZQT__.TTF" text="">
-					<Size x="246" y="20" />
+					<Size x="240" y="20" />
 					<Anchors>
 						<Anchor point="TOPLEFT" x="6" y="-40" />
 					</Anchors>
@@ -187,6 +187,38 @@
 						<Anchor point="TOPLEFT" x="83" y="-70" />
 					</Anchors>
 					<FontHeight val="8" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Real Time:" justifyH="RIGHT">
+					<Size x="52" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="8" y="-376" />
+					</Anchors>
+					<FontHeight val="8" />
+					<Color r="1" g="0.82" b="0" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Played Time:" justifyH="RIGHT">
+					<Size x="54" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="6" y="-402" />
+					</Anchors>
+					<FontHeight val="8" />
+					<Color r="1" g="0.82" b="0" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Current level:" justifyH="RIGHT">
+					<Size x="54" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="6" y="-419" />
+					</Anchors>
+					<FontHeight val="8" />
+					<Color r="1" g="0.82" b="0" />
+				</FontString>
+				<FontString name="ClassicWowSpeedrunCurrentLevelClock" font="Fonts\FRIZQT__.TTF" text="This level:" justifyH="RIGHT">
+					<Size x="54" y="20" />
+					<Anchors>
+						<Anchor point="TOPRIGHT" x="-4" y="-419" />
+					</Anchors>
+					<FontHeight val="8" />
+					<Color r="1" g="1" b="1" />
 				</FontString>
 			</Layer>
 		</Layers>
@@ -254,17 +286,6 @@
 					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton6" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="ClassicWowSpeedrunExportButton" inherits="UIPanelButtonTemplate" text="Export">
-				<Size x="75" y="23" />
-				<Anchors>
-					<Anchor point="TOPLEFT" x="6" y="-346" />
-				</Anchors>
-				<Scripts>
-					<OnClick>
-						ClassicWowSpeedrunExportButton_OnClick()
-					</OnClick>
-				</Scripts>
-			</Button>
 		</Frames>
 		<Scripts>
 			<OnLoad function="ClassicWowSpeedrun_OnLoad">
@@ -279,9 +300,9 @@
 		</Scripts>
 	</Frame>
 	<Frame name="ClassicWowSpeedrunExportFrame" hidden="true" frameStrata="DIALOG" enableKeyboard="true" propagateKeyboardInput="true">
-		<Size x="440" y="220" />
+		<Size x="440" y="168" />
 		<Anchors>
-			<Anchor point="CENTER" x="56" y="-8" />
+			<Anchor point="CENTER" x="0" y="26" />
 		</Anchors>
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
 			<BackgroundInsets>
@@ -292,37 +313,21 @@
 		</Backdrop>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString font="Fonts\FRIZQT__.TTF" text="To copy the export string press" maxLines="2">
+				<FontString name="$parentLabel1" font="Fonts\FRIZQT__.TTF" text="To copy the export string" maxLines="2">
 					<Size x="340" y="24" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="50" y="-16" />
+						<Anchor point="TOP" y="-16" />
 					</Anchors>
 					<FontHeight val="14" />
 					<Color r="1" g="0.82" b="0" />
 				</FontString>
-				<FontString font="Fonts\FRIZQT__.TTF" text="and paste it to">
-					<Size x="434" y="20" />
+				<FontString name="$parentLabel2" font="Fonts\FRIZQT__.TTF" text="Press STRG+C" maxLines="2">
+					<Size x="440" y="41" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="3" y="-113" />
+						<Anchor point="TOP" y="-70" />
 					</Anchors>
-					<FontHeight val="14" />
-					<Color r="1" g="1" b="1" />
-				</FontString>
-				<FontString font="Fonts\FRIZQT__.TTF" text="STRG+C" maxLines="2">
-					<Size x="340" y="41" />
-					<Anchors>
-						<Anchor point="TOPLEFT" x="50" y="-42" />
-					</Anchors>
-					<FontHeight val="30" />
+					<FontHeight val="26" />
 					<Color r="1" g="0.82" b="0" />
-				</FontString>
-				<FontString font="Fonts\FRIZQT__.TTF" text="ClassicWow-Speedrun.com">
-					<Size x="434" y="20" />
-					<Anchors>
-						<Anchor point="TOPLEFT" x="3" y="-140" />
-					</Anchors>
-					<FontHeight val="24" />
-					<Color r="1" g="1" b="1" />
 				</FontString>
 			</Layer>
 		</Layers>
@@ -330,11 +335,11 @@
 			<EditBox name="ClassicWowSpeedrunExportEditBox" inherits="InputBoxTemplate">
 				<Size x="340" y="32" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="50" y="-79" />
+					<Anchor point="TOP" y="-40" />
 				</Anchors>
 				<Scripts>
-					<OnKeyUp>
-						ClassicWowSpeedrunExportEditBox_OnKeyUp()
+					<OnKeyUp function="ClassicWowSpeedrunExportEditBox_OnKeyUp">
+
 					</OnKeyUp>
 					<OnCursorChanged>
 						ClassicWowSpeedrunExportEditBox_OnCursorChanged()
@@ -347,7 +352,7 @@
 			<Button name="ClassicWowSpeedrunExportFrameCloseButton" inherits="UIPanelButtonTemplate" text="Close">
 				<Size x="75" y="23" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="315" y="-174" />
+					<Anchor point="BOTTOM" y="20" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -597,6 +602,148 @@
 		<Scripts>
 			<OnShow>
 				ClassicWowSpeedrunNewCharDetected_OnShow()
+			</OnShow>
+		</Scripts>
+	</Frame>
+	<Frame name="ClassicWowSpeedRunFinished" hidden="true">
+		<Size x="448" y="275" />
+		<Anchors>
+			<Anchor point="CENTER" x="0" y="0" />
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize val="32" />
+			<EdgeSize val="32" />
+		</Backdrop>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString font="Fonts\FRIZQT__.TTF" text="Run finished!">
+					<Size x="269" y="45" />
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-24" />
+					</Anchors>
+					<FontHeight val="32" />
+					<Color r="1" g="0.82" b="0" />
+					<Shadow>
+						<Offset x="1" y="-1" />
+						<Color r="0" g="0" b="0" />
+					</Shadow>
+				</FontString>
+				<FontString name="ClassicWowSpeedrunFinishedRealTime" font="Fonts\FRIZQT__.TTF" text="123:45:01" justifyH="RIGHT">
+					<Size x="145" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="132" y="-136" />
+					</Anchors>
+					<FontHeight val="24" />
+					<Color r="1" g="1" b="1" />
+					<Shadow>
+						<Offset x="1" y="-1" />
+						<Color r="0" g="0" b="0" />
+					</Shadow>
+				</FontString>
+				<FontString name="ClassicWowSpeedrunFinishedPlayedTime" font="Fonts\FRIZQT__.TTF" text="123:45:01" justifyH="RIGHT">
+					<Size x="145" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="132" y="-162" />
+					</Anchors>
+					<FontHeight val="18" />
+					<Color r="1" g="1" b="1" />
+					<Shadow>
+						<Offset x="1" y="-1" />
+						<Color r="0" g="0" b="0" />
+					</Shadow>
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Real Time:" justifyH="RIGHT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="58" y="-136" />
+					</Anchors>
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Played time:" justifyH="RIGHT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="58" y="-162" />
+					</Anchors>
+				</FontString>
+				<FontString name="ClassicWowSpeedrunFinishedRealTimeChange" font="Fonts\FRIZQT__.TTF" text="+2:44" justifyH="RIGHT">
+					<Size x="92" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="276" y="-136" />
+					</Anchors>
+					<FontHeight val="20" />
+					<Color r="1" g="1" b="1" />
+					<Shadow>
+						<Offset x="1" y="-1" />
+						<Color r="0" g="0" b="0" />
+					</Shadow>
+				</FontString>
+				<FontString name="ClassicWowSpeedrunFinishedPlayedChange" font="Fonts\FRIZQT__.TTF" text="+7:13" justifyH="RIGHT">
+					<Size x="92" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="274" y="-162" />
+					</Anchors>
+					<FontHeight val="12" />
+					<Color r="1" g="1" b="1" />
+					<Shadow>
+						<Offset x="1" y="-1" />
+						<Color r="0" g="0" b="0" />
+					</Shadow>
+				</FontString>
+				<FontString name="ClassicWowSpeedRunFinshedTitle" font="Fonts\FRIZQT__.TTF" text="Target LvL 10 - any%">
+					<Size x="269" y="45" />
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-50" />
+					</Anchors>
+					<FontHeight val="18" />
+					<Color r="1" g="1" b="1" />
+					<Shadow>
+						<Offset x="1" y="-1" />
+						<Color r="0" g="0" b="0" />
+					</Shadow>
+				</FontString>
+				<FontString name="ClassicWowSpeedRunFinshedSubTitle" font="Fonts\FRIZQT__.TTF" text="">
+					<Size x="269" y="45" />
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-130" />
+					</Anchors>
+					<FontHeight val="12" />
+					<Color r="1" g="1" b="1" />
+					<Shadow>
+						<Offset x="1" y="-1" />
+						<Color r="0" g="0" b="0" />
+					</Shadow>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="ClassicWowSpeedrunExportButton" inherits="UIPanelButtonTemplate" text="Export run">
+				<Size x="90" y="23" />
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" x="130" y="30" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						ClassicWowSpeedrunExportButton_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentClose" inherits="UIPanelButtonTemplate" text="Close">
+				<Size x="90" y="23" />
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" x="-130" y="30" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						ClassicWowSpeedRunFinishedClose_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnShow>
+				ClassicWowSpeedRunFinished_OnShow()
 			</OnShow>
 		</Scripts>
 	</Frame>
