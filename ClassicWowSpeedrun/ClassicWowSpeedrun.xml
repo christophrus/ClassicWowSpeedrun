@@ -20,14 +20,14 @@
 						<Anchor point="TOPLEFT" x="4" y="0" />
 					</Anchors>
 				</FontString>
-				<FontString name="$parentPrevReal" inherits="GameFontNormal" text="- 001:05:22">
+				<FontString name="$parentPrevReal" inherits="GameFontNormal" text="- 001:05:22" justifyH="RIGHT">
 					<Size x="80" y="20" />
 					<Anchors>
 						<Anchor point="TOP" x="0" y="0" />
 					</Anchors>
 					<Color r="1" g="0" b="0" />
 				</FontString>
-				<FontString name="$parentPrevPlayed" font="Fonts\FRIZQT__.TTF" text="(+001:22:00)">
+				<FontString name="$parentPrevPlayed" font="Fonts\FRIZQT__.TTF" text="(+001:22:00)" justifyH="RIGHT">
 					<Size x="80" y="20" />
 					<Anchors>
 						<Anchor point="TOP" relativeTo="$parentPrevReal" relativePoint="BOTTOM">
@@ -48,7 +48,7 @@
 							</Offset>
 						</Anchor>
 					</Anchors>
-					<Color r="0" g="0.753" b="0" />
+					<Color r="1" g="1" b="1" />
 				</FontString>
 				<FontString name="$parentCurrPlayed" font="Fonts\FRIZQT__.TTF" text="(001:24:13)" justifyH="RIGHT">
 					<Size x="200" y="20" />
@@ -85,7 +85,7 @@
 		<Layers>
 			<Layer level="BACKGROUND">
 				<Texture name="HeaderBackground" file="Interface\AddOns\ClassicWowSpeedrun\skins\Background-Header.tga">
-					<Size x="246" y="70" />
+					<Size x="246" y="88" />
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="0" />
 					</Anchors>
@@ -95,7 +95,7 @@
 				<FontString name="ClassicWowSpeedrunRealTimeClock" font="Fonts\FRIZQT__.TTF" text="123:45:01" justifyH="RIGHT">
 					<Size x="236" y="52" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-4" y="-370" />
+						<Anchor point="TOPRIGHT" x="-4" y="-361" />
 					</Anchors>
 					<FontHeight val="34" />
 					<Color r="0" g="0.753" b="0" />
@@ -106,7 +106,7 @@
 						<Anchor point="TOPLEFT" x="0" y="-338" />
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\CharacterFrame\TemporaryPortrait-Female-NightElf">
+				<Texture name="ClassicWowSpeedrunClassIcon" file="Interface\CharacterFrame\TemporaryPortrait-Female-NightElf">
 					<Size x="25" y="25" />
 					<Anchors>
 						<Anchor point="TOPLEFT" />
@@ -117,7 +117,7 @@
 				<FontString name="ClassicWowSpeedrunStarted" font="Fonts\FRIZQT__.TTF" text="2019-07-03 14:23 UTC" justifyV="TOP" justifyH="RIGHT">
 					<Size x="119" y="11" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-4" y="-370" />
+						<Anchor point="TOPRIGHT" x="-4" y="-352" />
 					</Anchors>
 					<FontHeight val="8" />
 					<Color r="1" g="1" b="1" />
@@ -125,7 +125,7 @@
 				<FontString font="Fonts\FRIZQT__.TTF" text="Run started" justifyV="TOP" justifyH="RIGHT">
 					<Size x="112" y="10" />
 					<Anchors>
-						<Anchor point="TOPRIGHT" x="-4" y="-361" />
+						<Anchor point="TOPRIGHT" x="-4" y="-343" />
 					</Anchors>
 					<FontHeight val="8" />
 					<Color r="1" g="0.82" b="0" />
@@ -140,14 +140,14 @@
 				<FontString inherits="GameFontGreenLarge" text="Wow Classic">
 					<Size x="246" y="24" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="0" y="-3" />
+						<Anchor point="TOPLEFT" x="0" y="-10" />
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
 				<FontString name="ClassicWowSpeedrunSubTitle" inherits="GameFontNormal" text="(World #1 to 60 - Any%)">
 					<Size x="246" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="0" y="-20" />
+						<Anchor point="TOPLEFT" x="0" y="-27" />
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
@@ -170,17 +170,31 @@
 				<FontString name="ClassicWowSpeedrunSubSubTitle" font="Fonts\FRIZQT__.TTF" text="">
 					<Size x="246" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="6" y="-33" />
+						<Anchor point="TOPLEFT" x="6" y="-40" />
 					</Anchors>
 					<FontHeight val="10" />
+				</FontString>
+				<FontString name="ClassicWowSpeedtunPBLabel" hidden="true" font="Fonts\FRIZQT__.TTF" text="PB" justifyH="RIGHT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="83" y="-60" />
+					</Anchors>
+					<FontHeight val="10" />
+				</FontString>
+				<FontString name="ClassicWowSpeedrunPBDate" hidden="true" font="Fonts\FRIZQT__.TTF" text="PB" justifyH="RIGHT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="83" y="-70" />
+					</Anchors>
+					<FontHeight val="8" />
 				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
 			<ScrollFrame name="ClassicWowSpeedrunScrollFrame" inherits="FauxScrollFrameTemplate" hidden="true">
-				<Size x="220" y="288" />
+				<Size x="220" y="252" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="0" y="-70" />
+					<Anchor point="TOPLEFT" x="0" y="-88" />
 				</Anchors>
 				<Scripts>
 					<OnVerticalScroll>
@@ -240,15 +254,10 @@
 					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton6" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button name="LevelSplitButton8" inherits="ClassicWowSpeedrunSplitButton" text="Button1">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="LevelSplitButton7" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
 			<Button name="ClassicWowSpeedrunExportButton" inherits="UIPanelButtonTemplate" text="Export">
 				<Size x="75" y="23" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="6" y="-364" />
+					<Anchor point="TOPLEFT" x="6" y="-346" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
