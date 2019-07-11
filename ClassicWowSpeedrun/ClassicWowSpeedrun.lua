@@ -21,7 +21,7 @@ local g_race = nil
 local g_class = nil
 local g_sex = 1
 local g_targetLevel = nil
-g_privateBest = nil
+local g_privateBest = nil
 
 local json = LibStub:GetLibrary("LibJSON-1.0", true)
 local checksum = LibStub:GetLibrary("LibChecksum-1.0", true)
@@ -99,7 +99,7 @@ local function findPrivateBest(targetLevel)
 
 	for guid,run in pairs(runs) do
 		if (guid ~= g_guid) then
-			if (run['splits'][targetLevel] and run["options"]["targetLevel"] == targetLevel) then
+			if (run['splits'][targetLevel] and run["options"]["targetLevel"] == targetLevel and run['class'] == g_class) then
 				local timediff = run["splits"][targetLevel]["realTime"] - run["splits"][1]["realTime"]
 				if (timediff < fastestTime) then
 					fastestTime = timediff
@@ -120,12 +120,6 @@ function ClassicWowSpeedrun_OnUpdate()
 		splits = ClassicWowSpeedrunDB['runs'][g_guid]['splits']
 	end
 
-	if (not g_runFinished and g_currentLevel >= g_targetLevel) then
-		g_runFinished = true
-		ClassicWowSpeedrunDB['runs'][g_guid]["runFinished"] = true
-		ClassicWowSpeedRunFinished:Show()
-	end
-
 	if (not g_runFinished) then
 		if (#splits > 0) then	
 			g_startDate = splits[1]['realTime']
@@ -138,7 +132,7 @@ function ClassicWowSpeedrun_OnUpdate()
 				g_scrollBarInitialized = true
 			end
 		end
-		if (g_startDate and g_initialRealTime and g_initialPlayedTime) then
+		if (g_startDate and g_initialRealTime and g_initialPlayedTime and splits[g_currentLevel]) then
 			local serverTime = GetServerTime()
 			local realTime = serverTime - g_startDate
 			local playedTime = g_initialPlayedTime + (serverTime - g_initialRealTime)
@@ -276,7 +270,6 @@ function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
 	local run = ClassicWowSpeedrunDB['runs'][g_guid]
 	local options = run["options"]
 	local splits = run['splits']
-	g_currentLevel = #splits + 1  --UnitLevel("player")
 
 	g_targetLevel = options['targetLevel']
 
@@ -335,11 +328,20 @@ function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
 		-- write new split into db
 		if (not g_runFinished) then
 			if (splits[g_currentLevel] == nil) then
+				local theChecksum = checksum:generate(g_guid..g_currentLevel..realTime..playedTime)
 				splits[g_currentLevel] = {
 					['level'] = g_currentLevel,
 					['realTime'] = realTime,
-					['playedTime'] = playedTime
+					['playedTime'] = playedTime,
+					['checksum'] = theChecksum
 				}
+				if (g_currentLevel == g_targetLevel) then
+					g_runFinished = true
+					ClassicWowSpeedrunDB['runs'][g_guid]["runFinished"] = true
+					ClassicWowSpeedRunFinished:Show()
+					ClassicWowSpeedrunChecksumLabel:SetText(theChecksum)
+					Screenshot()
+				end
 			end
 		end
 		ClassicSpeedun_UpdateScrollbar()
@@ -351,6 +353,9 @@ function ClassicWowSpeedrun_OnLoad(self)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("ADDON_LOADED")
 	self:RegisterEvent("TIME_PLAYED_MSG")
+	self:RegisterEvent("PLAYER_LEVEL_UP")
+	self:RegisterEvent("SCREENSHOT_SUCCEEDED")
+	self:RegisterEvent("SCREENSHOT_STARTED")
 
 end
 
@@ -372,6 +377,19 @@ function ClassicWowSpeedrun_OnEvent(self, event, arg1, arg2, arg3, arg4)
 
 	if (event == "TIME_PLAYED_MSG") then
 		ClassicWowSpeedrun_HandlePlayed(arg1, arg2)
+	end
+
+	if (event == "SCREENSHOT_STARTED") then
+		ClassicWowSpeedrunChecksum:Show()
+	end
+
+	if (event == "SCREENSHOT_SUCCEEDED") then
+		ClassicWowSpeedrunChecksum:Hide()
+	end
+
+	if (event == "PLAYER_LEVEL_UP") then
+		g_currentLevel = arg1
+		RequestTimePlayed()
 	end
 end
 
@@ -491,7 +509,7 @@ function ClassicWowSpeedrunExportEditBox_OnKeyDown(self, key)
 
 	if (key == "C" and ctrlDown) then
 		ClassicWowSpeedrunExportFrameLabel1:SetText("Now you can paste it to")
-		ClassicWowSpeedrunExportFrameLabel2:SetText("WowClassic-Speedrun.com")
+		ClassicWowSpeedrunExportFrameLabel2:SetText("ClassicWow-Speedrun.com")
 		ClassicWowSpeedrunExportFrameLabel1:SetTextColor(0,192,0, 1)
 		ClassicWowSpeedrunExportFrameLabel2:SetTextColor(0,192,0, 1)
 	end
@@ -605,6 +623,7 @@ function ClassicWowSpeedRunFinished_OnShow()
 
 	ClassicWowSpeedrunFinishedRealTimeChange:SetText("")
 	ClassicWowSpeedrunFinishedPlayedChange:SetText("")
+	ClassicWowSpeedRunFinishedChecksum:SetText(format("Checksum: %s", splits[g_targetLevel]["checksum"]))
 
 	if (g_privateBest) then
 		local splitsPB = g_privateBest['splits']
