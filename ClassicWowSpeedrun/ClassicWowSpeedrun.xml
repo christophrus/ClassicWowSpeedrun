@@ -64,27 +64,15 @@
 				</FontString>
 			</Layer>
 		</Layers>
-		<HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD">
-			<Size>
-				<AbsDimension x="220" y="36" />
-			</Size>
-			<Anchors>
-				<Anchor point="TOP">
-					<Offset>
-						<AbsDimension x="0" y="0" />
-					</Offset>
-				</Anchor>
-			</Anchors>
-		</HighlightTexture>
 	</Button>
-	<Frame name="ClassicWowSpeedrun" hidden="true" parent="UIParent" toplevel="true" enableMouse="true">
+	<Frame name="ClassicWowSpeedrun" hidden="true" parent="UIParent" toplevel="true">
 		<Size x="246" y="440" />
 		<Anchors>
 			<Anchor point="TOPLEFT" x="20" y="-100" />
 		</Anchors>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="HeaderBackground" file="Interface\AddOns\ClassicWowSpeedrun\skins\Background-Header.tga">
+				<Texture name="$parentHeaderBackground" file="Interface\AddOns\ClassicWowSpeedrun\skins\Background-Header.tga">
 					<Size x="246" y="88" />
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="0" />
@@ -100,7 +88,7 @@
 					<FontHeight val="34" />
 					<Color r="0" g="0.753" b="0" />
 				</FontString>
-				<Texture file="Interface\AddOns\ClassicWowSpeedrun\skins\Background-Footer.tga">
+				<Texture name="$parentFooterBackground" file="Interface\AddOns\ClassicWowSpeedrun\skins\Background-Footer.tga">
 					<Size x="246" y="102" />
 					<Anchors>
 						<Anchor point="TOPLEFT" x="0" y="-338" />
@@ -302,7 +290,7 @@
 	<Frame name="ClassicWowSpeedrunExportFrame" hidden="true" frameStrata="DIALOG" enableKeyboard="true" propagateKeyboardInput="true">
 		<Size x="440" y="168" />
 		<Anchors>
-			<Anchor point="CENTER" x="0" y="26" />
+			<Anchor point="CENTER" x="0" y="0" />
 		</Anchors>
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
 			<BackgroundInsets>
@@ -363,9 +351,9 @@
 		</Frames>
 	</Frame>
 	<Frame name="ClassicWowSpeedrunNewCharDetected" hidden="true" toplevel="true" frameStrata="DIALOG">
-		<Size x="366" y="264" />
+		<Size x="366" y="326" />
 		<Anchors>
-			<Anchor point="CENTER" x="0" y="-32" />
+			<Anchor point="CENTER" x="0" y="0" />
 		</Anchors>
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
 			<BackgroundInsets>
@@ -385,35 +373,49 @@
 				<FontString name="LabelNoAH" hidden="true" font="Fonts\FRIZQT__.TTF" text="noAH" justifyH="LEFT">
 					<Size x="44" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="215" y="-157" />
+						<Anchor point="TOPLEFT" x="215" y="-187" />
 					</Anchors>
 					<FontHeight val="10" />
 				</FontString>
 				<FontString name="LabelNoParty" hidden="true" font="Fonts\FRIZQT__.TTF" text="noParty" justifyH="LEFT">
 					<Size x="51" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="215" y="-187" />
+						<Anchor point="TOPLEFT" x="215" y="-217" />
+					</Anchors>
+					<FontHeight val="10" />
+				</FontString>
+				<FontString name="LabelNoRest" hidden="true" font="Fonts\FRIZQT__.TTF" text="noRest" justifyH="LEFT">
+					<Size x="51" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="215" y="-247" />
 					</Anchors>
 					<FontHeight val="10" />
 				</FontString>
 				<FontString name="LabelNoMail" hidden="true" font="Fonts\FRIZQT__.TTF" text="noMail" justifyH="LEFT">
 					<Size x="53" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="290" y="-157" />
+						<Anchor point="TOPLEFT" x="290" y="-187" />
 					</Anchors>
 					<FontHeight val="10" />
 				</FontString>
 				<FontString name="LabelNoTrade" hidden="true" font="Fonts\FRIZQT__.TTF" text="noTrade" justifyH="LEFT">
 					<Size x="55" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="290" y="-187" />
+						<Anchor point="TOPLEFT" x="290" y="-217" />
+					</Anchors>
+					<FontHeight val="10" />
+				</FontString>
+				<FontString name="LabelNoBuff" hidden="true" font="Fonts\FRIZQT__.TTF" text="noBuff" justifyH="LEFT">
+					<Size x="55" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="290" y="-247" />
 					</Anchors>
 					<FontHeight val="10" />
 				</FontString>
 				<FontString font="Fonts\FRIZQT__.TTF" text="Custom" justifyH="LEFT">
 					<Size x="80" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="215" y="-124" />
+						<Anchor point="TOPLEFT" x="215" y="-154" />
 					</Anchors>
 					<FontHeight val="10" />
 					<Color r="1" g="1" b="1" />
@@ -421,13 +423,13 @@
 				<FontString inherits="GameFontNormal" text="Target" justifyH="LEFT">
 					<Size x="81" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="55" y="-65" />
+						<Anchor point="TOPLEFT" x="54" y="-128" />
 					</Anchors>
 				</FontString>
 				<FontString font="Fonts\FRIZQT__.TTF" text="World #1 to 60" justifyH="LEFT">
 					<Size x="101" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="55" y="-94" />
+						<Anchor point="TOPLEFT" x="54" y="-157" />
 					</Anchors>
 					<FontHeight val="10" />
 					<Color r="1" g="1" b="1" />
@@ -435,7 +437,7 @@
 				<FontString font="Fonts\FRIZQT__.TTF" text="Custom Level" justifyH="LEFT">
 					<Size x="80" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="55" y="-124" />
+						<Anchor point="TOPLEFT" x="54" y="-187" />
 					</Anchors>
 					<FontHeight val="10" />
 					<Color r="1" g="1" b="1" />
@@ -451,7 +453,7 @@
 				<FontString name="TargetLevelLabel" inherits="GameFontNormal" hidden="true" text="60">
 					<Size x="80" y="20" />
 					<Anchors>
-						<Anchor point="TOPLEFT" x="55" y="-176" />
+						<Anchor point="TOPLEFT" x="54" y="-239" />
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
@@ -468,13 +470,43 @@
 					</Anchors>
 					<Color r="1" g="1" b="1" />
 				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Hardcore" justifyH="LEFT">
+					<Size x="80" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="216" y="-124" />
+					</Anchors>
+					<FontHeight val="10" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString inherits="GameFontNormal" text="Focus Time" justifyH="LEFT">
+					<Size x="81" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="54" y="-65" />
+					</Anchors>
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Real" justifyH="LEFT">
+					<Size x="39" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="49" y="-93" />
+					</Anchors>
+					<FontHeight val="10" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
+				<FontString font="Fonts\FRIZQT__.TTF" text="Played" justifyH="LEFT">
+					<Size x="54" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT" x="124" y="-93" />
+					</Anchors>
+					<FontHeight val="10" />
+					<Color r="1" g="1" b="1" />
+				</FontString>
 			</Layer>
 		</Layers>
 		<Frames>
 			<Button name="ClassicWowSpeedrunStartRunButton" inherits="UIPanelButtonTemplate" text="Start run">
 				<Size x="90" y="23" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="95" y="-221" />
+					<Anchor point="BOTTOMLEFT" x="95" y="20" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -482,10 +514,10 @@
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="ClassicWowSpeedrunNotStartRunButton" inherits="UIPanelButtonTemplate" text="No, thanks!">
+			<Button name="ClassicWowSpeedrunNotStartRunButton" inherits="UIPanelButtonTemplate" text="Close">
 				<Size x="90" y="23" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="191" y="-221" />
+					<Anchor point="BOTTOMLEFT" x="191" y="20" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -496,25 +528,37 @@
 			<CheckButton name="OptionNoMail" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton1" checked="true">
 				<Size x="24" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="260" y="-157" />
+					<Anchor point="TOPLEFT" x="260" y="-187" />
 				</Anchors>
 			</CheckButton>
 			<CheckButton name="OptionNoTrade" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton2" checked="true">
 				<Size x="24" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="260" y="-187" />
+					<Anchor point="TOPLEFT" x="260" y="-217" />
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="OptionNoBuff" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton2" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="260" y="-247" />
 				</Anchors>
 			</CheckButton>
 			<CheckButton name="OptionNoAH" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton1" checked="true">
 				<Size x="24" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="185" y="-157" />
+					<Anchor point="TOPLEFT" x="185" y="-187" />
 				</Anchors>
 			</CheckButton>
 			<CheckButton name="OptionNoParty" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton1" checked="true">
 				<Size x="24" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="185" y="-187" />
+					<Anchor point="TOPLEFT" x="185" y="-217" />
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="OptionNoRest" inherits="UICheckButtonTemplate" hidden="true" text="CheckButton1" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="185" y="-247" />
 				</Anchors>
 			</CheckButton>
 			<CheckButton name="OptionAnyPercent" inherits="UIRadioButtonTemplate" text="CheckButton1" checked="true">
@@ -531,7 +575,7 @@
 			<CheckButton name="CustomDifficulty" inherits="UIRadioButtonTemplate" text="CheckButton1">
 				<Size x="24" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="185" y="-122" />
+					<Anchor point="TOPLEFT" x="185" y="-152" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -548,7 +592,7 @@
 			<CheckButton name="OptionTargetFirstTo60" inherits="UIRadioButtonTemplate" text="CheckButton1" checked="true">
 				<Size x="24" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="20" y="-92" />
+					<Anchor point="TOPLEFT" x="19" y="-155" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -559,7 +603,7 @@
 			<CheckButton name="OptionTargetCustom" inherits="UIRadioButtonTemplate" text="CheckButton1">
 				<Size x="24" y="24" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="20" y="-122" />
+					<Anchor point="TOPLEFT" x="19" y="-185" />
 				</Anchors>
 				<Scripts>
 					<OnClick>
@@ -570,7 +614,7 @@
 			<Slider name="ClassicWowSpeedrunLevelSlider" hidden="true" minValue="5" maxValue="60" defaultValue="60" valueStep="5" orientation="HORIZONTAL">
 				<Size x="140" y="17" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="20" y="-157" />
+					<Anchor point="TOPLEFT" x="19" y="-220" />
 				</Anchors>
 				<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
 					<BackgroundInsets left="3" right="3" top="6" bottom="6" />
@@ -587,6 +631,39 @@
 					<Size x="32" y="32" />
 				</ThumbTexture>
 			</Slider>
+			<CheckButton name="OptionHardcore" inherits="UIRadioButtonTemplate" text="CheckButton1">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="185" y="-122" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						OptionHardcore_OnClick()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="OptionFocusTimeReal" inherits="UIRadioButtonTemplate" text="CheckButton1" checked="true">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="19" y="-92" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						OptionFocusTimeReal_OnClick()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
+			<CheckButton name="OptionFocusTimePlayed" inherits="UIRadioButtonTemplate" text="CheckButton1">
+				<Size x="24" y="24" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="94" y="-92" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						OptionFocusTimePlayed_OnClick()
+					</OnClick>
+				</Scripts>
+			</CheckButton>
 		</Frames>
 		<Scripts>
 			<OnShow>
@@ -695,7 +772,7 @@
 				<FontString name="ClassicWowSpeedRunFinshedSubTitle" font="Fonts\FRIZQT__.TTF" text="">
 					<Size x="269" y="45" />
 					<Anchors>
-						<Anchor point="TOP" x="0" y="-130" />
+						<Anchor point="TOP" x="0" y="-71" />
 					</Anchors>
 					<FontHeight val="12" />
 					<Color r="1" g="1" b="1" />

@@ -2,6 +2,12 @@
 -- Create Date : 7/5/2019 5:24:46 PM
 
 ClassicWowSpeedrunDB = {}
+local g_versionMajor =	"1"
+local g_versionMinor =	"0"
+local g_versionPatch =	"0"
+local g_alpha = nil
+local g_addonVersion = format("%s.%s.%s", g_versionMajor, g_versionMinor, g_versionPatch)
+local g_wowVersion = nil
 local g_addonLoaded = false
 local g_playerLoaded = false
 local g_variablesInitialized = false
@@ -87,6 +93,43 @@ local function concatOptions(t, template)
 	end
 	ret, _ = ret:gsub(", $", "")
 	return ret
+end
+
+local function setAlpha(value)
+	local alpha = value / 100
+	ClassicWowSpeedrunHeaderBackground:SetAlpha(alpha)
+	ClassicWowSpeedrunFooterBackground:SetAlpha(alpha)
+	LevelSplitButton1Background:SetAlpha(alpha)
+	LevelSplitButton2Background:SetAlpha(alpha)
+	LevelSplitButton3Background:SetAlpha(alpha)
+	LevelSplitButton4Background:SetAlpha(alpha)
+	LevelSplitButton5Background:SetAlpha(alpha)
+	LevelSplitButton6Background:SetAlpha(alpha)
+	LevelSplitButton7Background:SetAlpha(alpha)
+end
+
+function ClassicWowSpeedrun_MakeRunChecksum()
+	local run = ClassicWowSpeedrunDB['runs'][g_guid]
+	local addonVersion = run["addonVersion"]
+	local wowVersion = run["wowVersion"]
+	local faction = run["faction"]
+	local race = run["race"]
+	local class = run["class"]
+	local splits = run["splits"]
+	local equipment = run["equipment"]
+	local buffs = run["buffs"]
+	local money = run["money"]
+	local talents = run["talents"]
+	local spells = run["spells"]
+	local group = run["group"]
+	local mail = run["mail"]
+	local ah = run["ah"]
+	local rested = run["rested"]
+	local death = run["death"]
+
+	local runChecksum = checksum:generate(g_guid..addonVersion..wowVersion..faction..race..class..#splits..#equipment..#buffs..#money..#talents..#spells..#group..#mail..#ah..#rested..#death)
+
+	run["checksum"] = runChecksum
 end
 
 local function findPrivateBest(targetLevel)
@@ -299,7 +342,7 @@ function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
 		ClassicWowSpeedrunSubTitle:SetText(format("%s - %s", options["preset"], options["difficulty"]))
 		local optionsLabel = concatOptions(options)
 		if (optionsLabel ~= "") then
-			ClassicWowSpeedrunSubSubTitle:SetText(format("(%s)", optionsLabel))
+			ClassicWowSpeedrunSubSubTitle:SetText(format("(no %s)", optionsLabel))
 		end
 
 		local privateBestGuid = findPrivateBest(g_targetLevel)
@@ -342,10 +385,180 @@ function ClassicWowSpeedrun_HandlePlayed(playedTime, timePlayedThisLevel, level)
 					ClassicWowSpeedrunChecksumLabel:SetText(theChecksum)
 					Screenshot()
 				end
+				ClassicWowSpeedrun_MakeRunChecksum()
 			end
 		end
 		ClassicSpeedun_UpdateScrollbar()
 	end
+end
+
+function ClassicWowSpeedrun_EquipmentChanged(equipmentSlot, slotEmptied)
+	if (not slotEmptied) then
+		local equipment = ClassicWowSpeedrunDB['runs'][g_guid]['equipment']
+		local itemId = GetInventoryItemID("player", equipmentSlot);
+		equipment[#equipment+1] = {
+			["timestamp"] = GetServerTime(),
+			["slot"] = equipmentSlot,
+			["itemId"] = itemId
+		}
+	end
+	ClassicWowSpeedrun_MakeRunChecksum()
+end
+
+function ClassicWowSpeedrun_HandleAuraChanged()
+	local buffs = ClassicWowSpeedrunDB['runs'][g_guid]['buffs']
+	local buffSnapShot = {}
+	local timestamp = GetServerTime()
+	for i=1,16 do
+		local name, icon, count, _, _, duration, source, _, _, spellId = UnitBuff("player",i)
+		if (name) then
+			name = tostring(name)
+			icon = tostring(icon)
+			count = tostring(count)
+			source = tostring(source)
+			spellId = tostring(spellId)
+			duration = duration - GetTime()
+			local auraChecksum = checksum:generate(g_guid..timestamp..name..icon..count..duration..source..spellId)
+			buffSnapShot[i] = format("%s;%s;%s;%s;%s;%s;%s", name, icon, count, duration, source, spellId, auraChecksum)
+		end
+	end
+	if (#buffSnapShot > 0) then
+		buffs[#buffs+1] = {
+			["timestamp"] = timestamp,
+			["snapshot"] = buffSnapShot
+		}
+		ClassicWowSpeedrun_MakeRunChecksum()
+	end
+end
+
+function ClassicWowSpeedrun_HandleMoneyChanged()
+	local money = ClassicWowSpeedrunDB['runs'][g_guid]['money']
+	local timestamp = GetServerTime()
+	local balance = GetMoney()
+	local moneyChecksum = checksum:generate(g_guid..timestamp..balance)
+	money[#money+1] = {
+		["timestamp"] = timestamp,
+		["balance"] =  balance,
+		["checksum"] = moneyChecksum
+	}
+	ClassicWowSpeedrun_MakeRunChecksum()
+end
+
+function ClassicWowSpeedrun_HandleTalentChanged()
+	local talents = ClassicWowSpeedrunDB['runs'][g_guid]['talents']
+	local talentSnapshot = {}
+	local timestamp = GetServerTime()
+	for i=1,3 do
+		for j=1,20 do
+			local name, id, _, _, spent, available = GetTalentInfo(i,j)
+			if (name) then
+				if (spent > 0) then
+					local talentChecksum = checksum:generate(g_guid..timestamp..id..spent..available)
+					talentSnapshot[#talentSnapshot+1] = format("%s;%s;%s;%s;%s", name,id,spent,available, talentChecksum)
+				end
+			end
+		end
+	end
+	talents[#talents+1] = {
+		["timestamp"] = timestamp,
+		["snapshot"] =  talentSnapshot
+	}
+	ClassicWowSpeedrun_MakeRunChecksum()
+end
+
+function ClassicWowSpeedrun_HandleSpellLearned(spellId)
+	local spells = ClassicWowSpeedrunDB['runs'][g_guid]['spells']
+	local timestamp = GetServerTime()
+	local spellChecksum = checksum:generate(g_guid..timestamp..spellId)
+	spells[#spells+1] = {
+		["timestamp"] = timestamp,
+		["spellId"] =  spellId,
+		["checksum"] = spellChecksum
+	}
+	ClassicWowSpeedrun_MakeRunChecksum()
+end
+
+function ClassicWowSpeedrun_HandleGroupEvent(event)
+	local group = ClassicWowSpeedrunDB['runs'][g_guid]['group']
+	local timestamp = GetServerTime()
+	local groupChecksum = checksum:generate(g_guid..timestamp..event)
+
+	group[#group+1] = {
+		["timestamp"] = timestamp,
+		["event"] =  event,
+		["checksum"] = groupChecksum
+	}
+	ClassicWowSpeedrun_MakeRunChecksum()
+end
+
+function ClassicWowSpeedrun_HandleCombat(event)
+	local combat = ClassicWowSpeedrunDB['runs'][g_guid]['combat']
+	local timestamp = GetServerTime()
+	local combatEvent = checksum:generate(g_guid..timestamp..event)
+
+	combat[#combat+1] = {
+		["timestamp"] = timestamp,
+		["event"] =  event,
+		["checksum"] = combatEvent
+	}
+	ClassicWowSpeedrun_MakeRunChecksum()
+end
+
+function ClassicWowSpeedrun_HandleMailShow(event)
+
+	local mail = ClassicWowSpeedrunDB['runs'][g_guid]['mail']
+	local timestamp = GetServerTime()
+	local mailChecksum = checksum:generate(g_guid..timestamp)
+
+	mail[#mail+1] = {
+		["timestamp"] = timestamp,
+		["checksum"] = mailChecksum
+	}
+	ClassicWowSpeedrun_MakeRunChecksum()
+end
+
+function ClassicWowSpeedrun_HandleAHShow(event)
+
+	local ah = ClassicWowSpeedrunDB['runs'][g_guid]['ah']
+	local timestamp = GetServerTime()
+	local mailChecksum = checksum:generate(g_guid..timestamp)
+
+	ah[#ah+1] = {
+		["timestamp"] = timestamp,
+		["checksum"] = mailChecksum
+	}
+	ClassicWowSpeedrun_MakeRunChecksum()
+end
+
+function ClassicWowSpeedrun_HandleXPGain(text)
+	local restedXP = GetXPExhaustion()
+	local rested = ClassicWowSpeedrunDB['runs'][g_guid]['rested']
+	if (restedXP) then
+		local timestamp = GetServerTime()
+		local restedChecksum = checksum:generate(g_guid..timestamp..text..restedXP)
+
+		rested[#rested+1] = {
+			["timestamp"] = timestamp,
+			['text'] = text,
+			["restedXP"] = restedXP,
+			["checksum"] = restedChecksum
+		}
+
+		ClassicWowSpeedrun_MakeRunChecksum()
+	end
+end
+
+function ClassicWowSpeedrun_HandleDeath()
+
+	local death = ClassicWowSpeedrunDB['runs'][g_guid]['death']
+	local timestamp = GetServerTime()
+	local deathChecksum = checksum:generate(g_guid..timestamp)
+
+	death[#death+1] = {
+		["timestamp"] = timestamp,
+		["checksum"] = deathChecksum
+	}
+	ClassicWowSpeedrun_MakeRunChecksum()
 end
 
 function ClassicWowSpeedrun_OnLoad(self)
@@ -356,6 +569,23 @@ function ClassicWowSpeedrun_OnLoad(self)
 	self:RegisterEvent("PLAYER_LEVEL_UP")
 	self:RegisterEvent("SCREENSHOT_SUCCEEDED")
 	self:RegisterEvent("SCREENSHOT_STARTED")
+	self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+	self:RegisterEvent("UNIT_AURA")
+	self:RegisterEvent("PLAYER_MONEY")
+	self:RegisterEvent("CHARACTER_POINTS_CHANGED")
+	self:RegisterEvent("LEARNED_SPELL_IN_TAB")
+	self:RegisterEvent("GROUP_JOINED")
+	self:RegisterEvent("GROUP_LEFT")
+	self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	self:RegisterEvent("PLAYER_REGEN_ENABLED")
+	self:RegisterEvent("MAIL_SHOW")
+	self:RegisterEvent("AUCTION_HOUSE_SHOW")
+	self:RegisterEvent("CHAT_MSG_COMBAT_XP_GAIN")
+	self:RegisterEvent("PLAYER_DEAD")
+
+	SLASH_CensusPlusCMD1 = "/classicwowspeedrun"
+	SLASH_CensusPlusCMD2 = "/cwsr"
+	SlashCmdList["CensusPlusCMD"] = ClassicWowSpeedrun_Command
 
 end
 
@@ -391,6 +621,59 @@ function ClassicWowSpeedrun_OnEvent(self, event, arg1, arg2, arg3, arg4)
 		g_currentLevel = arg1
 		RequestTimePlayed()
 	end
+
+	if (event == "PLAYER_EQUIPMENT_CHANGED") then
+		ClassicWowSpeedrun_EquipmentChanged(arg1, arg2)
+	end
+
+	if (event == "UNIT_AURA" and arg1 == "player") then
+		ClassicWowSpeedrun_HandleAuraChanged()
+	end
+
+	if (event == "PLAYER_MONEY") then
+		ClassicWowSpeedrun_HandleMoneyChanged()
+	end
+
+	if (event == "CHARACTER_POINTS_CHANGED" and arg1 == -1) then
+		ClassicWowSpeedrun_HandleTalentChanged()
+	end
+
+	if (event == "LEARNED_SPELL_IN_TAB") then
+		ClassicWowSpeedrun_HandleSpellLearned(arg1)
+	end
+
+	if (event == "GROUP_JOINED") then 
+		ClassicWowSpeedrun_HandleGroupEvent("JOINED")
+	end
+
+	if (event == "GROUP_LEFT") then 
+		ClassicWowSpeedrun_HandleGroupEvent("LEFT")
+	end
+
+	if (event == "PLAYER_REGEN_DISABLED") then 
+		ClassicWowSpeedrun_HandleCombat("ENTER")
+	end
+
+	if (event == "PLAYER_REGEN_ENABLED") then 
+		ClassicWowSpeedrun_HandleCombat("LEAVE")
+	end
+
+	if (event == "MAIL_SHOW") then 
+		ClassicWowSpeedrun_HandleMailShow()
+	end
+
+	if (event == "AUCTION_HOUSE_SHOW") then 
+		ClassicWowSpeedrun_HandleAHShow()
+	end
+
+	if (event == "CHAT_MSG_COMBAT_XP_GAIN") then
+		ClassicWowSpeedrun_HandleXPGain(arg1)
+	end
+
+	if (event == "PLAYER_DEAD") then
+		ClassicWowSpeedrun_HandleDeath()
+	end
+	
 end
 
 function ClassicWowSpeedrun_InitializeVariables()
@@ -404,6 +687,14 @@ function ClassicWowSpeedrun_InitializeVariables()
 	_, g_race = UnitRace("player")
 	_, g_class = UnitClass("player")
 
+	if (ClassicWowSpeedrunDB['options'] == nil) then
+		ClassicWowSpeedrunDB['options'] = {
+			["alpha"] = 80
+		}
+	end
+
+	g_alpha = ClassicWowSpeedrunDB['options']['alpha']
+	
 
 	if (ClassicWowSpeedrunDB['runs'] == nil) then
 		ClassicWowSpeedrunDB['runs'] = {}
@@ -414,8 +705,10 @@ function ClassicWowSpeedrun_InitializeVariables()
 		ClassicWowSpeedrunDB['runs'][g_guid] = {}
 
 		local version, build = GetBuildInfo()
+		g_wowVersion = format("%s (%s)", version, build)
 
-		ClassicWowSpeedrunDB['runs'][g_guid]["wowVersion"] = format("%s (%s)", version, build)
+		ClassicWowSpeedrunDB['runs'][g_guid]["wowVersion"] = g_wowVersion
+		ClassicWowSpeedrunDB['runs'][g_guid]["addonVersion"] = g_addonVersion
 		ClassicWowSpeedrunDB['runs'][g_guid]["realmName"] = g_realmName
 		ClassicWowSpeedrunDB['runs'][g_guid]["name"] = g_name
 		ClassicWowSpeedrunDB['runs'][g_guid]["faction"] = g_faction
@@ -425,28 +718,66 @@ function ClassicWowSpeedrun_InitializeVariables()
 		ClassicWowSpeedrunDB['runs'][g_guid]["runStarted"] = false
 		ClassicWowSpeedrunDB['runs'][g_guid]["runFinished"] = false
 
-
 	end
 
 	if (ClassicWowSpeedrunDB['runs'][g_guid]['options'] == nil) then
 		ClassicWowSpeedrunDB['runs'][g_guid]['options'] = {}
 	end
 
-	if (ClassicWowSpeedrunDB['runs'][g_guid]['optionsFullfilled'] == nil) then
-		ClassicWowSpeedrunDB['runs'][g_guid]['optionsFullfilled'] = {
-			['noAH'] = true,
-			['noParty'] = true,
-			['noMail'] = true,
-			['noTrade'] = true,
-		}
-	end
-
 	if (ClassicWowSpeedrunDB['runs'][g_guid]['splits'] == nil) then
 		ClassicWowSpeedrunDB['runs'][g_guid]['splits'] = {}
 	end
 
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['equipment'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['equipment'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['buffs'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['buffs'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['money'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['money'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['talents'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['talents'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['spells'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['spells'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['group'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['group'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['combat'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['combat'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['mail'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['mail'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['ah'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['ah'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['rested'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['rested'] = {}
+	end
+
+	if (ClassicWowSpeedrunDB['runs'][g_guid]['death'] == nil) then
+		ClassicWowSpeedrunDB['runs'][g_guid]['death'] = {}
+	end
+
 	g_runStarted = ClassicWowSpeedrunDB['runs'][g_guid]["runStarted"]
 	g_runFinished = ClassicWowSpeedrunDB['runs'][g_guid]["runFinished"]
+
+	setAlpha(g_alpha)
+
+	ClassicWowSpeedrun_MakeRunChecksum()
 
 	RequestTimePlayed()
 	g_variablesInitialized = true
@@ -468,7 +799,7 @@ function Button1_OnClick()
 end
 
 function ClassicWowSpeedrunExportButton_OnClick()
-	local jsonText = json:encode(ClassicWowSpeedrunDB)
+	local jsonText = json:encode(ClassicWowSpeedrunDB['runs'][g_guid])
 	local base64Text = base64:encode(jsonText)
 	ClassicWowSpeedRunFinished:Hide()
 	ClassicWowSpeedrunExportFrame:Show()
@@ -489,7 +820,7 @@ end
 local ctrlDown = false
 
 function ClassicWowSpeedrunExportEditBox_OnKeyUp(self, key)
-	local jsonText = json:encode(ClassicWowSpeedrunDB)
+	local jsonText = json:encode(ClassicWowSpeedrunDB['runs'][g_guid])
 	local base64Text = base64:encode(jsonText)
 	ClassicWowSpeedrunExportEditBox:SetText(base64Text)
 	ClassicWowSpeedrunExportEditBox:HighlightText()
@@ -528,13 +859,33 @@ function ClassicWowSpeedrunStartRunButton_OnClick()
 	local subSubLabel = ""
 
 	if (CustomDifficulty:GetChecked()) then
-		options["noAh"] = OptionNoAH:GetChecked()
-		options["noParty"] = OptionNoParty:GetChecked()
-		options["noMail"] = OptionNoMail:GetChecked()
-		options["noTrade"] = OptionNoTrade:GetChecked()
-		options["difficulty"] = "custom difficulty"
+		options["ah"] = OptionNoAH:GetChecked()
+		options["party"] = OptionNoParty:GetChecked()
+		options["mail"] = OptionNoMail:GetChecked()
+		options["trade"] = OptionNoTrade:GetChecked()
+		options["rest"] = OptionNoRest:GetChecked()
+		options["buff"] = OptionNoBuff:GetChecked()
+		if (options["ah"] and options["party"]  and options["mail"]  and options["trade"]  and options["rest"]  and options["buff"]) then
+			options["difficulty"] = "hardcore"
+		else
+			options["difficulty"] = "custom"
+		end
+	elseif (OptionHardcore:GetChecked()) then
+		options["ah"] = OptionNoAH:GetChecked()
+		options["party"] = OptionNoParty:GetChecked()
+		options["mail"] = OptionNoMail:GetChecked()
+		options["trade"] = OptionNoTrade:GetChecked()
+		options["rest"] = OptionNoRest:GetChecked()
+		options["buff"] = OptionNoBuff:GetChecked()
+		options["difficulty"] = "hardcore"
 	else
 		options["difficulty"] = "any%"
+	end
+
+	if (OptionFocusTimeReal:GetChecked()) then
+		options["focus"] = "real"
+	else
+		options["focus"] = "played"
 	end
 
 	if (OptionTargetFirstTo60:GetChecked()) then
@@ -572,6 +923,7 @@ end
 
 function CustomDifficulty_OnClick()
 	CustomDifficulty:SetChecked(true)
+	OptionHardcore:SetChecked(false)
 	OptionAnyPercent:SetChecked(false)
 	LabelNoAH:Show()
 	OptionNoAH:Show()
@@ -581,10 +933,15 @@ function CustomDifficulty_OnClick()
 	OptionNoMail:Show()
 	LabelNoTrade:Show()
 	OptionNoTrade:Show()
+	LabelNoRest:Show()
+	OptionNoRest:Show()
+	LabelNoBuff:Show()
+	OptionNoBuff:Show()
 end
 
 function OptionAnyPercent_OnClick()
 	CustomDifficulty:SetChecked(false)
+	OptionHardcore:SetChecked(false)
 	OptionAnyPercent:SetChecked(true)
 	LabelNoAH:Hide()
 	OptionNoAH:Hide()
@@ -594,6 +951,38 @@ function OptionAnyPercent_OnClick()
 	OptionNoMail:Hide()
 	LabelNoTrade:Hide()
 	OptionNoTrade:Hide()
+	LabelNoRest:Hide()
+	OptionNoRest:Hide()
+	LabelNoBuff:Hide()
+	OptionNoBuff:Hide()
+end
+
+function OptionHardcore_OnClick()
+	CustomDifficulty:SetChecked(false)
+	OptionHardcore:SetChecked(true)
+	OptionAnyPercent:SetChecked(fasle)
+	LabelNoAH:Hide()
+	OptionNoAH:Hide()
+	LabelNoParty:Hide()
+	OptionNoParty:Hide()
+	LabelNoMail:Hide()
+	OptionNoMail:Hide()
+	LabelNoTrade:Hide()
+	OptionNoTrade:Hide()
+	LabelNoRest:Hide()
+	OptionNoRest:Hide()
+	LabelNoBuff:Hide()
+	OptionNoBuff:Hide()
+end
+
+function OptionFocusTimePlayed_OnClick()
+	OptionFocusTimePlayed:SetChecked(true)
+	OptionFocusTimeReal:SetChecked(false)
+end
+
+function OptionFocusTimeReal_OnClick()
+	OptionFocusTimePlayed:SetChecked(false)
+	OptionFocusTimeReal:SetChecked(true)
 end
 
 function OptionTargetCustom_OnClick()
@@ -659,7 +1048,7 @@ function ClassicWowSpeedRunFinished_OnShow()
 
 	local optionsLabel = concatOptions(options)
 	if (optionsLabel ~= "") then
-		ClassicWowSpeedRunFinshedSubTitle:SetText(format("(%s)", optionsLabel))
+		ClassicWowSpeedRunFinshedSubTitle:SetText(format("(no %s)", optionsLabel))
 	end
 end
 
